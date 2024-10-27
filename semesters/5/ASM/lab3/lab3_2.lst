@@ -1,0 +1,3978 @@
+Microsoft (R) Macro Assembler Version 6.14.8444		    10/27/24 14:03:34
+lab3_2.asm						     Page 1 - 1
+
+
+				; Лабораторная работа №3
+				; Выполнил: студент группы XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+				; Вариант: 5
+				; Программа выполняет операции над ASCII кодами первой буквы фамилии и имени студента.
+				; Используются логические и сдвиговые операции.
+
+				.486
+				.model flat, stdcall
+				option casemap:none
+				.stack 100h
+
+				;=========================================
+				include c:\masm32\include\kernel32.inc
+			      C ; --------------------------------------------------------------------------------------------------
+			      C ;                          kernel32.inc Copyright The MASM32 SDK 1998-2010
+			      C ; --------------------------------------------------------------------------------------------------
+			      C 
+			      C IFNDEF KERNEL32_INC
+ = 1			      C KERNEL32_INC equ <1>
+			      C 
+			      C ActivateActCtx PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C AddAtomA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = AddAtomA		      C   AddAtom equ <AddAtomA>
+			      C ENDIF
+			      C 
+			      C AddAtomW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C AddLocalAlternateComputerNameA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = AddLocalAlternateCompute   C   AddLocalAlternateComputerName equ <AddLocalAlternateComputerNameA>
+   rNameA
+			      C ENDIF
+			      C 
+			      C AddLocalAlternateComputerNameW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C AddRefActCtx PROTO STDCALL :DWORD
+			      C AddVectoredExceptionHandler PROTO STDCALL :DWORD,:DWORD
+			      C AllocConsole PROTO STDCALL
+			      C AllocateUserPhysicalPages PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C AreFileApisANSI PROTO STDCALL
+			      C AssignProcessToJobObject PROTO STDCALL :DWORD,:DWORD
+			      C AttachConsole PROTO STDCALL :DWORD
+			      C BackupRead PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C BackupSeek PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C BackupWrite PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C Beep PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C BeginUpdateResourceA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = BeginUpdateResourceA	      C   BeginUpdateResource equ <BeginUpdateResourceA>
+			      C ENDIF
+			      C 
+			      C BeginUpdateResourceW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C BindIoCompletionCallback PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C BuildCommDCBA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = BuildCommDCBA	      C   BuildCommDCB equ <BuildCommDCBA>
+			      C ENDIF
+			      C 
+			      C BuildCommDCBAndTimeoutsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = BuildCommDCBAndTimeoutsA   C   BuildCommDCBAndTimeouts equ <BuildCommDCBAndTimeoutsA>
+			      C ENDIF
+			      C 
+			      C BuildCommDCBAndTimeoutsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C BuildCommDCBW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CallNamedPipeA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CallNamedPipeA	      C   CallNamedPipe equ <CallNamedPipeA>
+			      C ENDIF
+			      C 
+			      C CallNamedPipeW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CancelDeviceWakeupRequest PROTO STDCALL :DWORD
+			      C CancelIo PROTO STDCALL :DWORD
+			      C CancelTimerQueueTimer PROTO STDCALL :DWORD,:DWORD
+			      C CancelWaitableTimer PROTO STDCALL :DWORD
+			      C ChangeTimerQueueTimer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CheckNameLegalDOS8Dot3A PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CheckNameLegalDOS8Dot3A    C   CheckNameLegalDOS8Dot3 equ <CheckNameLegalDOS8Dot3A>
+			      C ENDIF
+			      C 
+			      C CheckNameLegalDOS8Dot3W PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CheckRemoteDebuggerPresent PROTO STDCALL :DWORD,:DWORD
+			      C ClearCommBreak PROTO STDCALL :DWORD
+			      C ClearCommError PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C CloseHandle PROTO STDCALL :DWORD
+			      C 
+			      C CommConfigDialogA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CommConfigDialogA	      C   CommConfigDialog equ <CommConfigDialogA>
+			      C ENDIF
+			      C 
+			      C CommConfigDialogW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CompareFileTime PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C CompareStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CompareStringA	      C   CompareString equ <CompareStringA>
+			      C ENDIF
+			      C 
+			      C CompareStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ConnectNamedPipe PROTO STDCALL :DWORD,:DWORD
+			      C ContinueDebugEvent PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C ConvertDefaultLocale PROTO STDCALL :DWORD
+			      C ConvertFiberToThread PROTO STDCALL
+			      C ConvertThreadToFiber PROTO STDCALL :DWORD
+			      C 
+			      C CopyFileA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CopyFileA		      C   CopyFile equ <CopyFileA>
+			      C ENDIF
+			      C 
+			      C CopyFileExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CopyFileExA		      C   CopyFileEx equ <CopyFileExA>
+			      C ENDIF
+			      C 
+			      C CopyFileExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CopyFileW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateActCtxA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = CreateActCtxA	      C   CreateActCtx equ <CreateActCtxA>
+			      C ENDIF
+			      C 
+			      C CreateActCtxW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateConsoleScreenBuffer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateDirectoryA	      C   CreateDirectory equ <CreateDirectoryA>
+			      C ENDIF
+			      C 
+			      C CreateDirectoryExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateDirectoryExA	      C   CreateDirectoryEx equ <CreateDirectoryExA>
+			      C ENDIF
+			      C 
+			      C CreateDirectoryExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateEventA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateEventA		      C   CreateEvent equ <CreateEventA>
+			      C ENDIF
+			      C 
+			      C CreateEventW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateFiber PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C CreateFiberEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateFileA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateFileA		      C   CreateFile equ <CreateFileA>
+			      C ENDIF
+			      C 
+			      C CreateFileMappingA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateFileMappingA	      C   CreateFileMapping equ <CreateFileMappingA>
+			      C ENDIF
+			      C 
+			      C CreateFileMappingW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateFileW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateHardLinkA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateHardLinkA	      C   CreateHardLink equ <CreateHardLinkA>
+			      C ENDIF
+			      C 
+			      C CreateHardLinkW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateIoCompletionPort PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateJobObjectA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateJobObjectA	      C   CreateJobObject equ <CreateJobObjectA>
+			      C ENDIF
+			      C 
+			      C CreateJobObjectW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateJobSet PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateMailslotA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateMailslotA	      C   CreateMailslot equ <CreateMailslotA>
+			      C ENDIF
+			      C 
+			      C CreateMailslotW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateMemoryResourceNotification PROTO STDCALL :DWORD
+			      C 
+			      C CreateMutexA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateMutexA		      C   CreateMutex equ <CreateMutexA>
+			      C ENDIF
+			      C 
+			      C CreateMutexW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateNamedPipeA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateNamedPipeA	      C   CreateNamedPipe equ <CreateNamedPipeA>
+			      C ENDIF
+			      C 
+			      C CreateNamedPipeW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreatePipe PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateProcessA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateProcessA	      C   CreateProcess equ <CreateProcessA>
+			      C ENDIF
+			      C 
+			      C CreateProcessInternalWSecure PROTO STDCALL
+			      C 
+			      C CreateProcessW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateRemoteThread PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateSemaphoreA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateSemaphoreA	      C   CreateSemaphore equ <CreateSemaphoreA>
+			      C ENDIF
+			      C 
+			      C CreateSemaphoreW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateTapePartition PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateThread PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateTimerQueue PROTO STDCALL
+			      C CreateTimerQueueTimer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateToolhelp32Snapshot PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C CreateWaitableTimerA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateWaitableTimerA	      C   CreateWaitableTimer equ <CreateWaitableTimerA>
+			      C ENDIF
+			      C 
+			      C CreateWaitableTimerW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DeactivateActCtx PROTO STDCALL :DWORD,:DWORD
+			      C DebugActiveProcess PROTO STDCALL :DWORD
+			      C DebugActiveProcessStop PROTO STDCALL :DWORD
+			      C DebugBreak PROTO STDCALL
+			      C DebugBreakProcess PROTO STDCALL :DWORD
+			      C DebugSetProcessKillOnExit PROTO STDCALL :DWORD
+			      C DecodePointer PROTO STDCALL :DWORD
+			      C DecodeSystemPointer PROTO STDCALL :DWORD
+			      C 
+			      C DefineDosDeviceA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DefineDosDeviceA	      C   DefineDosDevice equ <DefineDosDeviceA>
+			      C ENDIF
+			      C 
+			      C DefineDosDeviceW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DeleteAtom PROTO STDCALL :DWORD
+			      C DeleteCriticalSection PROTO STDCALL :DWORD
+			      C DeleteFiber PROTO STDCALL :DWORD
+			      C 
+			      C DeleteFileA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = DeleteFileA		      C   DeleteFile equ <DeleteFileA>
+			      C ENDIF
+			      C 
+			      C DeleteFileW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DeleteTimerQueue PROTO STDCALL :DWORD
+			      C DeleteTimerQueueEx PROTO STDCALL :DWORD,:DWORD
+			      C DeleteTimerQueueTimer PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C DeleteVolumeMountPointA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = DeleteVolumeMountPointA    C   DeleteVolumeMountPoint equ <DeleteVolumeMountPointA>
+			      C ENDIF
+			      C 
+			      C DeleteVolumeMountPointW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DeviceIoControl PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DisableThreadLibraryCalls PROTO STDCALL :DWORD
+			      C DisconnectNamedPipe PROTO STDCALL :DWORD
+			      C 
+			      C DnsHostnameToComputerNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DnsHostnameToComputerNam   C   DnsHostnameToComputerName equ <DnsHostnameToComputerNameA>
+   eA
+			      C ENDIF
+			      C 
+			      C DnsHostnameToComputerNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DosDateTimeToFileTime PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DuplicateHandle PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C EncodePointer PROTO STDCALL :DWORD
+			      C EncodeSystemPointer PROTO STDCALL :DWORD
+			      C 
+			      C EndUpdateResourceA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EndUpdateResourceA	      C   EndUpdateResource equ <EndUpdateResourceA>
+			      C ENDIF
+			      C 
+			      C EndUpdateResourceW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnterCriticalSection PROTO STDCALL :DWORD
+			      C 
+			      C EnumCalendarInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumCalendarInfoA	      C   EnumCalendarInfo equ <EnumCalendarInfoA>
+			      C ENDIF
+			      C 
+			      C EnumCalendarInfoExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumCalendarInfoExA	      C   EnumCalendarInfoEx equ <EnumCalendarInfoExA>
+			      C ENDIF
+			      C 
+			      C EnumCalendarInfoExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumCalendarInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumDateFormatsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDateFormatsA	      C   EnumDateFormats equ <EnumDateFormatsA>
+			      C ENDIF
+			      C 
+			      C EnumDateFormatsExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDateFormatsExA	      C   EnumDateFormatsEx equ <EnumDateFormatsExA>
+			      C ENDIF
+			      C 
+			      C EnumDateFormatsExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumDateFormatsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumLanguageGroupLocalesA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumLanguageGroupLocales   C   EnumLanguageGroupLocales equ <EnumLanguageGroupLocalesA>
+   A
+			      C ENDIF
+			      C 
+			      C EnumLanguageGroupLocalesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumResourceLanguagesA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumResourceLanguagesA     C   EnumResourceLanguages equ <EnumResourceLanguagesA>
+			      C ENDIF
+			      C 
+			      C EnumResourceLanguagesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumResourceNamesA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumResourceNamesA	      C   EnumResourceNames equ <EnumResourceNamesA>
+			      C ENDIF
+			      C 
+			      C EnumResourceNamesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumResourceTypesA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumResourceTypesA	      C   EnumResourceTypes equ <EnumResourceTypesA>
+			      C ENDIF
+			      C 
+			      C EnumResourceTypesW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumSystemCodePagesA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumSystemCodePagesA	      C   EnumSystemCodePages equ <EnumSystemCodePagesA>
+			      C ENDIF
+			      C 
+			      C EnumSystemCodePagesW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumSystemGeoID PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C EnumSystemLanguageGroupsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumSystemLanguageGroups   C   EnumSystemLanguageGroups equ <EnumSystemLanguageGroupsA>
+   A
+			      C ENDIF
+			      C 
+			      C EnumSystemLanguageGroupsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumSystemLocalesA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumSystemLocalesA	      C   EnumSystemLocales equ <EnumSystemLocalesA>
+			      C ENDIF
+			      C 
+			      C EnumSystemLocalesW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumTimeFormatsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumTimeFormatsA	      C   EnumTimeFormats equ <EnumTimeFormatsA>
+			      C ENDIF
+			      C 
+			      C EnumTimeFormatsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumUILanguagesA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumUILanguagesA	      C   EnumUILanguages equ <EnumUILanguagesA>
+			      C ENDIF
+			      C 
+			      C EnumUILanguagesW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumerateLocalComputerNamesA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumerateLocalComputerNa   C   EnumerateLocalComputerNames equ <EnumerateLocalComputerNamesA>
+   mesA
+			      C ENDIF
+			      C 
+			      C EnumerateLocalComputerNamesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EraseTape PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C EscapeCommFunction PROTO STDCALL :DWORD,:DWORD
+			      C ExitProcess PROTO STDCALL :DWORD
+			      C ExitThread PROTO STDCALL :DWORD
+			      C 
+			      C ExpandEnvironmentStringsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ExpandEnvironmentStrings   C   ExpandEnvironmentStrings equ <ExpandEnvironmentStringsA>
+   A
+			      C ENDIF
+			      C 
+			      C ExpandEnvironmentStringsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FatalAppExitA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FatalAppExitA	      C   FatalAppExit equ <FatalAppExitA>
+			      C ENDIF
+			      C 
+			      C FatalAppExitW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FatalExit PROTO STDCALL :DWORD
+			      C FileTimeToDosDateTime PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C FileTimeToLocalFileTime PROTO STDCALL :DWORD,:DWORD
+			      C FileTimeToSystemTime PROTO STDCALL :DWORD,:DWORD
+			      C FillConsoleOutputAttribute PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C FillConsoleOutputCharacterA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FillConsoleOutputCharact   C   FillConsoleOutputCharacter equ <FillConsoleOutputCharacterA>
+   erA
+			      C ENDIF
+			      C 
+			      C FillConsoleOutputCharacterW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindActCtxSectionGuid PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C FindActCtxSectionStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindActCtxSectionStringA   C   FindActCtxSectionString equ <FindActCtxSectionStringA>
+			      C ENDIF
+			      C 
+			      C FindActCtxSectionStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindAtomA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = FindAtomA		      C   FindAtom equ <FindAtomA>
+			      C ENDIF
+			      C 
+			      C FindAtomW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindClose PROTO STDCALL :DWORD
+			      C FindCloseChangeNotification PROTO STDCALL :DWORD
+			      C 
+			      C FindFirstChangeNotificationA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindFirstChangeNotificat   C   FindFirstChangeNotification equ <FindFirstChangeNotificationA>
+   ionA
+			      C ENDIF
+			      C 
+			      C FindFirstChangeNotificationW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindFirstFileA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindFirstFileA	      C   FindFirstFile equ <FindFirstFileA>
+			      C ENDIF
+			      C 
+			      C FindFirstFileExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindFirstFileExA	      C   FindFirstFileEx equ <FindFirstFileExA>
+			      C ENDIF
+			      C 
+			      C FindFirstFileExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindFirstFileW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindFirstVolumeA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindFirstVolumeA	      C   FindFirstVolume equ <FindFirstVolumeA>
+			      C ENDIF
+			      C 
+			      C FindFirstVolumeMountPointA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindFirstVolumeMountPoin   C   FindFirstVolumeMountPoint equ <FindFirstVolumeMountPointA>
+   tA
+			      C ENDIF
+			      C 
+			      C FindFirstVolumeMountPointW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindFirstVolumeW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindNextChangeNotification PROTO STDCALL :DWORD
+			      C 
+			      C FindNextFileA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindNextFileA	      C   FindNextFile equ <FindNextFileA>
+			      C ENDIF
+			      C 
+			      C FindNextFileW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindNextVolumeA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindNextVolumeA	      C   FindNextVolume equ <FindNextVolumeA>
+			      C ENDIF
+			      C 
+			      C FindNextVolumeMountPointA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindNextVolumeMountPoint   C   FindNextVolumeMountPoint equ <FindNextVolumeMountPointA>
+   A
+			      C ENDIF
+			      C 
+			      C FindNextVolumeMountPointW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindNextVolumeW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindResourceA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindResourceA	      C   FindResource equ <FindResourceA>
+			      C ENDIF
+			      C 
+			      C FindResourceExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindResourceExA	      C   FindResourceEx equ <FindResourceExA>
+			      C ENDIF
+			      C 
+			      C FindResourceExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindResourceW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindVolumeClose PROTO STDCALL :DWORD
+			      C FindVolumeMountPointClose PROTO STDCALL :DWORD
+			      C FlushConsoleInputBuffer PROTO STDCALL :DWORD
+			      C FlushFileBuffers PROTO STDCALL :DWORD
+			      C FlushInstructionCache PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C FlushViewOfFile PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C FoldStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FoldStringA		      C   FoldString equ <FoldStringA>
+			      C ENDIF
+			      C 
+			      C FoldStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FormatMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FormatMessageA	      C   FormatMessage equ <FormatMessageA>
+			      C ENDIF
+			      C 
+			      C FormatMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FreeConsole PROTO STDCALL
+			      C 
+			      C FreeEnvironmentStringsA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = FreeEnvironmentStringsA    C   FreeEnvironmentStrings equ <FreeEnvironmentStringsA>
+			      C ENDIF
+			      C 
+			      C FreeEnvironmentStringsW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FreeLibrary PROTO STDCALL :DWORD
+			      C FreeLibraryAndExitThread PROTO STDCALL :DWORD,:DWORD
+			      C FreeResource PROTO STDCALL :DWORD
+			      C FreeUserPhysicalPages PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GenerateConsoleCtrlEvent PROTO STDCALL :DWORD,:DWORD
+			      C GetACP PROTO STDCALL
+			      C 
+			      C GetAtomNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetAtomNameA		      C   GetAtomName equ <GetAtomNameA>
+			      C ENDIF
+			      C 
+			      C GetAtomNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C GetBinaryTypeA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetBinaryTypeA	      C   GetBinaryType equ <GetBinaryTypeA>
+			      C ENDIF
+			      C 
+			      C GetBinaryTypeW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCPInfo PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetCPInfoExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetCPInfoExA		      C   GetCPInfoEx equ <GetCPInfoExA>
+			      C ENDIF
+			      C 
+			      C GetCPInfoExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCalendarInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetCalendarInfoA	      C   GetCalendarInfo equ <GetCalendarInfoA>
+			      C ENDIF
+			      C 
+			      C GetCalendarInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCommConfig PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetCommMask PROTO STDCALL :DWORD,:DWORD
+			      C GetCommModemStatus PROTO STDCALL :DWORD,:DWORD
+			      C GetCommProperties PROTO STDCALL :DWORD,:DWORD
+			      C GetCommState PROTO STDCALL :DWORD,:DWORD
+			      C GetCommTimeouts PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetCommandLineA PROTO STDCALL
+			      C IFNDEF __UNICODE__
+ = GetCommandLineA	      C   GetCommandLine equ <GetCommandLineA>
+			      C ENDIF
+			      C 
+			      C GetCommandLineW PROTO STDCALL
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCompressedFileSizeA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetCompressedFileSizeA     C   GetCompressedFileSize equ <GetCompressedFileSizeA>
+			      C ENDIF
+			      C 
+			      C GetCompressedFileSizeW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetComputerNameA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetComputerNameA	      C   GetComputerName equ <GetComputerNameA>
+			      C ENDIF
+			      C 
+			      C GetComputerNameExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetComputerNameExA	      C   GetComputerNameEx equ <GetComputerNameExA>
+			      C ENDIF
+			      C 
+			      C GetComputerNameExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetComputerNameW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetConsoleCP PROTO STDCALL
+			      C GetConsoleCursorInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetConsoleDisplayMode PROTO STDCALL :DWORD
+			      C GetConsoleFontSize PROTO STDCALL :DWORD,:DWORD
+			      C GetConsoleMode PROTO STDCALL :DWORD,:DWORD
+			      C GetConsoleOutputCP PROTO STDCALL
+			      C GetConsoleProcessList PROTO STDCALL :DWORD,:DWORD
+			      C GetConsoleScreenBufferInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetConsoleSelectionInfo PROTO STDCALL :DWORD
+			      C 
+			      C GetConsoleTitleA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetConsoleTitleA	      C   GetConsoleTitle equ <GetConsoleTitleA>
+			      C ENDIF
+			      C 
+			      C GetConsoleTitleW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetConsoleWindow PROTO STDCALL
+			      C 
+			      C GetCurrencyFormatA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetCurrencyFormatA	      C   GetCurrencyFormat equ <GetCurrencyFormatA>
+			      C ENDIF
+			      C 
+			      C GetCurrencyFormatW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCurrentActCtx PROTO STDCALL :DWORD
+			      C GetCurrentConsoleFont PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C GetCurrentDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetCurrentDirectoryA	      C   GetCurrentDirectory equ <GetCurrentDirectoryA>
+			      C ENDIF
+			      C 
+			      C GetCurrentDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetCurrentProcess PROTO STDCALL
+			      C GetCurrentProcessId PROTO STDCALL
+			      C GetCurrentThread PROTO STDCALL
+			      C GetCurrentThreadId PROTO STDCALL
+			      C 
+			      C GetDateFormatA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDateFormatA	      C   GetDateFormat equ <GetDateFormatA>
+			      C ENDIF
+			      C 
+			      C GetDateFormatW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDefaultCommConfigA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDefaultCommConfigA      C   GetDefaultCommConfig equ <GetDefaultCommConfigA>
+			      C ENDIF
+			      C 
+			      C GetDefaultCommConfigW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDevicePowerState PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetDiskFreeSpaceA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDiskFreeSpaceA	      C   GetDiskFreeSpace equ <GetDiskFreeSpaceA>
+			      C ENDIF
+			      C 
+			      C GetDiskFreeSpaceExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDiskFreeSpaceExA	      C   GetDiskFreeSpaceEx equ <GetDiskFreeSpaceExA>
+			      C ENDIF
+			      C 
+			      C GetDiskFreeSpaceExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDiskFreeSpaceW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDllDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDllDirectoryA	      C   GetDllDirectory equ <GetDllDirectoryA>
+			      C ENDIF
+			      C 
+			      C GetDllDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDriveTypeA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetDriveTypeA	      C   GetDriveType equ <GetDriveTypeA>
+			      C ENDIF
+			      C 
+			      C GetDriveTypeW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C GetEnvironmentStringsA PROTO STDCALL
+			      C IFNDEF __UNICODE__
+ = GetEnvironmentStringsA     C   GetEnvironmentStrings equ <GetEnvironmentStringsA>
+			      C ENDIF
+			      C 
+			      C GetEnvironmentStringsW PROTO STDCALL
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetEnvironmentVariableA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetEnvironmentVariableA    C   GetEnvironmentVariable equ <GetEnvironmentVariableA>
+			      C ENDIF
+			      C 
+			      C GetEnvironmentVariableW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetExitCodeProcess PROTO STDCALL :DWORD,:DWORD
+			      C GetExitCodeThread PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetFileAttributesA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetFileAttributesA	      C   GetFileAttributes equ <GetFileAttributesA>
+			      C ENDIF
+			      C 
+			      C GetFileAttributesExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetFileAttributesExA	      C   GetFileAttributesEx equ <GetFileAttributesExA>
+			      C ENDIF
+			      C 
+			      C GetFileAttributesExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetFileAttributesW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetFileInformationByHandle PROTO STDCALL :DWORD,:DWORD
+			      C GetFileSize PROTO STDCALL :DWORD,:DWORD
+			      C GetFileSizeEx PROTO STDCALL :DWORD,:DWORD
+			      C GetFileTime PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetFileType PROTO STDCALL :DWORD
+			      C 
+			      C GetFirmwareEnvironmentVariableA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetFirmwareEnvironmentVa   C   GetFirmwareEnvironmentVariable equ <GetFirmwareEnvironmentVariableA>
+   riableA
+			      C ENDIF
+			      C 
+			      C GetFirmwareEnvironmentVariableW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetFullPathNameA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetFullPathNameA	      C   GetFullPathName equ <GetFullPathNameA>
+			      C ENDIF
+			      C 
+			      C GetFullPathNameW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetGeoInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetGeoInfoA		      C   GetGeoInfo equ <GetGeoInfoA>
+			      C ENDIF
+			      C 
+			      C GetGeoInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetHandleInformation PROTO STDCALL :DWORD,:DWORD
+			      C GetLargestConsoleWindowSize PROTO STDCALL :DWORD
+			      C GetLastError PROTO STDCALL
+			      C GetLocalTime PROTO STDCALL :DWORD
+			      C 
+			      C GetLocaleInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetLocaleInfoA	      C   GetLocaleInfo equ <GetLocaleInfoA>
+			      C ENDIF
+			      C 
+			      C GetLocaleInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetLogicalDriveStringsA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetLogicalDriveStringsA    C   GetLogicalDriveStrings equ <GetLogicalDriveStringsA>
+			      C ENDIF
+			      C 
+			      C GetLogicalDriveStringsW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetLogicalDrives PROTO STDCALL
+			      C 
+			      C GetLongPathNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetLongPathNameA	      C   GetLongPathName equ <GetLongPathNameA>
+			      C ENDIF
+			      C 
+			      C GetLongPathNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetMailslotInfo PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C GetModuleFileNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetModuleFileNameA	      C   GetModuleFileName equ <GetModuleFileNameA>
+			      C ENDIF
+			      C 
+			      C GetModuleFileNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetModuleHandleA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetModuleHandleA	      C   GetModuleHandle equ <GetModuleHandleA>
+			      C ENDIF
+			      C 
+			      C GetModuleHandleExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetModuleHandleExA	      C   GetModuleHandleEx equ <GetModuleHandleExA>
+			      C ENDIF
+			      C 
+			      C GetModuleHandleExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetModuleHandleW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetNamedPipeHandleStateA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetNamedPipeHandleStateA   C   GetNamedPipeHandleState equ <GetNamedPipeHandleStateA>
+			      C ENDIF
+			      C 
+			      C GetNamedPipeHandleStateW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetNamedPipeInfo PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetNativeSystemInfo PROTO STDCALL :DWORD
+			      C GetNumaAvailableMemory PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetNumaAvailableMemoryNode PROTO STDCALL :DWORD,:DWORD
+			      C GetNumaHighestNodeNumber PROTO STDCALL :DWORD
+			      C GetNumaNodeProcessorMask PROTO STDCALL :DWORD,:DWORD
+			      C GetNumaProcessorMap PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetNumaProcessorNode PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetNumberFormatA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetNumberFormatA	      C   GetNumberFormat equ <GetNumberFormatA>
+			      C ENDIF
+			      C 
+			      C GetNumberFormatW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetNumberOfConsoleInputEvents PROTO STDCALL :DWORD,:DWORD
+			      C GetNumberOfConsoleMouseButtons PROTO STDCALL :DWORD
+			      C GetOEMCP PROTO STDCALL
+			      C GetOverlappedResult PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetPriorityClass PROTO STDCALL :DWORD
+			      C 
+			      C GetPrivateProfileIntA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPrivateProfileIntA      C   GetPrivateProfileInt equ <GetPrivateProfileIntA>
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileIntW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileSectionA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPrivateProfileSection   C   GetPrivateProfileSection equ <GetPrivateProfileSectionA>
+   A
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileSectionNamesA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPrivateProfileSection   C   GetPrivateProfileSectionNames equ <GetPrivateProfileSectionNamesA>
+   NamesA
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileSectionNamesW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileSectionW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPrivateProfileStringA   C   GetPrivateProfileString equ <GetPrivateProfileStringA>
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileStructA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPrivateProfileStructA   C   GetPrivateProfileStruct equ <GetPrivateProfileStructA>
+			      C ENDIF
+			      C 
+			      C GetPrivateProfileStructW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetProcAddress PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessAffinityMask PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetProcessHandleCount PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessHeap PROTO STDCALL
+			      C GetProcessHeaps PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessId PROTO STDCALL :DWORD
+			      C GetProcessIoCounters PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessPriorityBoost PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessShutdownParameters PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessTimes PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetProcessVersion PROTO STDCALL :DWORD
+			      C GetProcessWorkingSetSize PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C GetProfileIntA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetProfileIntA	      C   GetProfileInt equ <GetProfileIntA>
+			      C ENDIF
+			      C 
+			      C GetProfileIntW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetProfileSectionA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetProfileSectionA	      C   GetProfileSection equ <GetProfileSectionA>
+			      C ENDIF
+			      C 
+			      C GetProfileSectionW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetProfileStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetProfileStringA	      C   GetProfileString equ <GetProfileStringA>
+			      C ENDIF
+			      C 
+			      C GetProfileStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetQueuedCompletionStatus PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C GetShortPathNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetShortPathNameA	      C   GetShortPathName equ <GetShortPathNameA>
+			      C ENDIF
+			      C 
+			      C GetShortPathNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetStartupInfoA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetStartupInfoA	      C   GetStartupInfo equ <GetStartupInfoA>
+			      C ENDIF
+			      C 
+			      C GetStartupInfoW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetStdHandle PROTO STDCALL :DWORD
+			      C 
+			      C GetStringTypeA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetStringTypeA	      C   GetStringType equ <GetStringTypeA>
+			      C ENDIF
+			      C 
+			      C GetStringTypeExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetStringTypeExA	      C   GetStringTypeEx equ <GetStringTypeExA>
+			      C ENDIF
+			      C 
+			      C GetStringTypeExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetStringTypeW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetSystemDefaultLCID PROTO STDCALL
+			      C GetSystemDefaultLangID PROTO STDCALL
+			      C GetSystemDefaultUILanguage PROTO STDCALL
+			      C 
+			      C GetSystemDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetSystemDirectoryA	      C   GetSystemDirectory equ <GetSystemDirectoryA>
+			      C ENDIF
+			      C 
+			      C GetSystemDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetSystemInfo PROTO STDCALL :DWORD
+			      C GetSystemPowerStatus PROTO STDCALL :DWORD
+			      C GetSystemRegistryQuota PROTO STDCALL :DWORD,:DWORD
+			      C GetSystemTime PROTO STDCALL :DWORD
+			      C GetSystemTimeAdjustment PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetSystemTimeAsFileTime PROTO STDCALL :DWORD
+			      C GetSystemTimes PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C GetSystemWindowsDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetSystemWindowsDirector   C   GetSystemWindowsDirectory equ <GetSystemWindowsDirectoryA>
+   yA
+			      C ENDIF
+			      C 
+			      C GetSystemWindowsDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetSystemWow64DirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetSystemWow64DirectoryA   C   GetSystemWow64Directory equ <GetSystemWow64DirectoryA>
+			      C ENDIF
+			      C 
+			      C GetSystemWow64DirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetTapeParameters PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetTapePosition PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetTapeStatus PROTO STDCALL :DWORD
+			      C 
+			      C GetTempFileNameA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetTempFileNameA	      C   GetTempFileName equ <GetTempFileNameA>
+			      C ENDIF
+			      C 
+			      C GetTempFileNameW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetTempPathA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetTempPathA		      C   GetTempPath equ <GetTempPathA>
+			      C ENDIF
+			      C 
+			      C GetTempPathW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetThreadContext PROTO STDCALL :DWORD,:DWORD
+			      C GetThreadIOPendingFlag PROTO STDCALL :DWORD,:DWORD
+			      C GetThreadLocale PROTO STDCALL
+			      C GetThreadPriority PROTO STDCALL :DWORD
+			      C GetThreadPriorityBoost PROTO STDCALL :DWORD,:DWORD
+			      C GetThreadSelectorEntry PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetThreadTimes PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetTickCount PROTO STDCALL
+			      C 
+			      C GetTimeFormatA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetTimeFormatA	      C   GetTimeFormat equ <GetTimeFormatA>
+			      C ENDIF
+			      C 
+			      C GetTimeFormatW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetTimeZoneInformation PROTO STDCALL :DWORD
+			      C GetUserDefaultLCID PROTO STDCALL
+			      C GetUserDefaultLangID PROTO STDCALL
+			      C GetUserDefaultUILanguage PROTO STDCALL
+			      C GetUserGeoID PROTO STDCALL :DWORD
+			      C GetVersion PROTO STDCALL
+			      C 
+			      C GetVersionExA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetVersionExA	      C   GetVersionEx equ <GetVersionExA>
+			      C ENDIF
+			      C 
+			      C GetVersionExW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetVolumeInformationA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetVolumeInformationA      C   GetVolumeInformation equ <GetVolumeInformationA>
+			      C ENDIF
+			      C 
+			      C GetVolumeInformationW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetVolumeNameForVolumeMountPointA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetVolumeNameForVolumeMo   C   GetVolumeNameForVolumeMountPoint equ <GetVolumeNameForVolumeMountPointA>
+   untPointA
+			      C ENDIF
+			      C 
+			      C GetVolumeNameForVolumeMountPointW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetVolumePathNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetVolumePathNameA	      C   GetVolumePathName equ <GetVolumePathNameA>
+			      C ENDIF
+			      C 
+			      C GetVolumePathNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetVolumePathNamesForVolumeNameA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetVolumePathNamesForVol   C   GetVolumePathNamesForVolumeName equ <GetVolumePathNamesForVolumeNameA>
+   umeNameA
+			      C ENDIF
+			      C 
+			      C GetVolumePathNamesForVolumeNameW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetWindowsDirectoryA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetWindowsDirectoryA	      C   GetWindowsDirectory equ <GetWindowsDirectoryA>
+			      C ENDIF
+			      C 
+			      C GetWindowsDirectoryW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetWriteWatch PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C GlobalAddAtomA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GlobalAddAtomA	      C   GlobalAddAtom equ <GlobalAddAtomA>
+			      C ENDIF
+			      C 
+			      C GlobalAddAtomW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GlobalAlloc PROTO STDCALL :DWORD,:DWORD
+			      C GlobalCompact PROTO STDCALL :DWORD
+			      C GlobalDeleteAtom PROTO STDCALL :DWORD
+			      C 
+			      C GlobalFindAtomA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GlobalFindAtomA	      C   GlobalFindAtom equ <GlobalFindAtomA>
+			      C ENDIF
+			      C 
+			      C GlobalFindAtomW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GlobalFix PROTO STDCALL :DWORD
+			      C GlobalFlags PROTO STDCALL :DWORD
+			      C GlobalFree PROTO STDCALL :DWORD
+			      C 
+			      C GlobalGetAtomNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GlobalGetAtomNameA	      C   GlobalGetAtomName equ <GlobalGetAtomNameA>
+			      C ENDIF
+			      C 
+			      C GlobalGetAtomNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GlobalHandle PROTO STDCALL :DWORD
+			      C GlobalLock PROTO STDCALL :DWORD
+			      C GlobalMemoryStatus PROTO STDCALL :DWORD
+			      C GlobalMemoryStatusEx PROTO STDCALL :DWORD
+			      C GlobalReAlloc PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GlobalSize PROTO STDCALL :DWORD
+			      C GlobalUnWire PROTO STDCALL :DWORD
+			      C GlobalUnfix PROTO STDCALL :DWORD
+			      C GlobalUnlock PROTO STDCALL :DWORD
+			      C GlobalWire PROTO STDCALL :DWORD
+			      C Heap32First PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C Heap32ListFirst PROTO STDCALL :DWORD,:DWORD
+			      C Heap32ListNext PROTO STDCALL :DWORD,:DWORD
+			      C Heap32Next PROTO STDCALL :DWORD
+			      C HeapAlloc PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C HeapCompact PROTO STDCALL :DWORD,:DWORD
+			      C HeapCreate PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C HeapDestroy PROTO STDCALL :DWORD
+			      C HeapFree PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C HeapLock PROTO STDCALL :DWORD
+			      C HeapQueryInformation PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C HeapReAlloc PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C HeapSetInformation PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C HeapSize PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C HeapUnlock PROTO STDCALL :DWORD
+			      C HeapValidate PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C HeapWalk PROTO STDCALL :DWORD,:DWORD
+			      C InitAtomTable PROTO STDCALL :DWORD
+			      C InitializeCriticalSection PROTO STDCALL :DWORD
+			      C InitializeCriticalSectionAndSpinCount PROTO STDCALL :DWORD,:DWORD
+			      C InitializeSListHead PROTO STDCALL :DWORD
+			      C InterlockedCompareExchange PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C InterlockedDecrement PROTO STDCALL :DWORD
+			      C InterlockedExchange PROTO STDCALL :DWORD,:DWORD
+			      C InterlockedExchangeAdd PROTO STDCALL :DWORD,:DWORD
+			      C InterlockedFlushSList PROTO STDCALL :DWORD
+			      C InterlockedIncrement PROTO STDCALL :DWORD
+			      C InterlockedPopEntrySList PROTO STDCALL :DWORD
+			      C InterlockedPushEntrySList PROTO STDCALL :DWORD,:DWORD
+			      C IsBadCodePtr PROTO STDCALL :DWORD
+			      C IsBadHugeReadPtr PROTO STDCALL :DWORD,:DWORD
+			      C IsBadHugeWritePtr PROTO STDCALL :DWORD,:DWORD
+			      C IsBadReadPtr PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C IsBadStringPtrA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = IsBadStringPtrA	      C   IsBadStringPtr equ <IsBadStringPtrA>
+			      C ENDIF
+			      C 
+			      C IsBadStringPtrW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsBadWritePtr PROTO STDCALL :DWORD,:DWORD
+			      C IsDBCSLeadByte PROTO STDCALL :DWORD
+			      C IsDBCSLeadByteEx PROTO STDCALL :DWORD,:DWORD
+			      C IsDebuggerPresent PROTO STDCALL
+			      C IsProcessInJob PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IsProcessorFeaturePresent PROTO STDCALL :DWORD
+			      C IsSystemResumeAutomatic PROTO STDCALL
+			      C IsValidCodePage PROTO STDCALL :DWORD
+			      C IsValidLanguageGroup PROTO STDCALL :DWORD,:DWORD
+			      C IsValidLocale PROTO STDCALL :DWORD,:DWORD
+			      C IsWow64Process PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C LCMapStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LCMapStringA		      C   LCMapString equ <LCMapStringA>
+			      C ENDIF
+			      C 
+			      C LCMapStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LeaveCriticalSection PROTO STDCALL :DWORD
+			      C 
+			      C LoadLibraryA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = LoadLibraryA		      C   LoadLibrary equ <LoadLibraryA>
+			      C ENDIF
+			      C 
+			      C LoadLibraryExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadLibraryExA	      C   LoadLibraryEx equ <LoadLibraryExA>
+			      C ENDIF
+			      C 
+			      C LoadLibraryExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadLibraryW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadModule PROTO STDCALL :DWORD,:DWORD
+			      C LoadResource PROTO STDCALL :DWORD,:DWORD
+			      C LocalAlloc PROTO STDCALL :DWORD,:DWORD
+			      C LocalCompact PROTO STDCALL :DWORD
+			      C LocalFileTimeToFileTime PROTO STDCALL :DWORD,:DWORD
+			      C LocalFlags PROTO STDCALL :DWORD
+			      C LocalFree PROTO STDCALL :DWORD
+			      C LocalHandle PROTO STDCALL :DWORD
+			      C LocalLock PROTO STDCALL :DWORD
+			      C LocalReAlloc PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C LocalShrink PROTO STDCALL :DWORD,:DWORD
+			      C LocalSize PROTO STDCALL :DWORD
+			      C LocalUnlock PROTO STDCALL :DWORD
+			      C LockFile PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C LockFileEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C LockResource PROTO STDCALL :DWORD
+			      C MapUserPhysicalPages PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C MapUserPhysicalPagesScatter PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C MapViewOfFile PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C MapViewOfFileEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C Module32FirstW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C Module32NextW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MoveFileA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MoveFileA		      C   MoveFile equ <MoveFileA>
+			      C ENDIF
+			      C 
+			      C MoveFileExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MoveFileExA		      C   MoveFileEx equ <MoveFileExA>
+			      C ENDIF
+			      C 
+			      C MoveFileExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MoveFileW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MoveFileWithProgressA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MoveFileWithProgressA      C   MoveFileWithProgress equ <MoveFileWithProgressA>
+			      C ENDIF
+			      C 
+			      C MoveFileWithProgressW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MulDiv PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C MultiByteToWideChar PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C NumaVirtualQueryNode PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C OpenEventA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenEventA		      C   OpenEvent equ <OpenEventA>
+			      C ENDIF
+			      C 
+			      C OpenEventW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenFile PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C OpenFileMappingA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenFileMappingA	      C   OpenFileMapping equ <OpenFileMappingA>
+			      C ENDIF
+			      C 
+			      C OpenFileMappingW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenJobObjectA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenJobObjectA	      C   OpenJobObject equ <OpenJobObjectA>
+			      C ENDIF
+			      C 
+			      C OpenJobObjectW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenMutexA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenMutexA		      C   OpenMutex equ <OpenMutexA>
+			      C ENDIF
+			      C 
+			      C OpenMutexW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenProcess PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C OpenSemaphoreA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenSemaphoreA	      C   OpenSemaphore equ <OpenSemaphoreA>
+			      C ENDIF
+			      C 
+			      C OpenSemaphoreW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenThread PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C OpenWaitableTimerA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenWaitableTimerA	      C   OpenWaitableTimer equ <OpenWaitableTimerA>
+			      C ENDIF
+			      C 
+			      C OpenWaitableTimerW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OutputDebugStringA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = OutputDebugStringA	      C   OutputDebugString equ <OutputDebugStringA>
+			      C ENDIF
+			      C 
+			      C OutputDebugStringW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PeekConsoleInputA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = PeekConsoleInputA	      C   PeekConsoleInput equ <PeekConsoleInputA>
+			      C ENDIF
+			      C 
+			      C PeekConsoleInputW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PeekNamedPipe PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C PostQueuedCompletionStatus PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C PrepareTape PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C Process32FirstW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C Process32NextW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ProcessIdToSessionId PROTO STDCALL :DWORD,:DWORD
+			      C PulseEvent PROTO STDCALL :DWORD
+			      C PurgeComm PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C QueryActCtxW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C QueryDepthSList PROTO STDCALL :DWORD
+			      C 
+			      C QueryDosDeviceA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = QueryDosDeviceA	      C   QueryDosDevice equ <QueryDosDeviceA>
+			      C ENDIF
+			      C 
+			      C QueryDosDeviceW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C QueryInformationJobObject PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C QueryMemoryResourceNotification PROTO STDCALL :DWORD,:DWORD
+			      C QueryPerformanceCounter PROTO STDCALL :DWORD
+			      C QueryPerformanceFrequency PROTO STDCALL :DWORD
+			      C QueueUserAPC PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C QueueUserWorkItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C RaiseException PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C ReadConsoleA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ReadConsoleA		      C   ReadConsole equ <ReadConsoleA>
+			      C ENDIF
+			      C 
+			      C ReadConsoleInputA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ReadConsoleInputA	      C   ReadConsoleInput equ <ReadConsoleInputA>
+			      C ENDIF
+			      C 
+			      C ReadConsoleInputW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReadConsoleOutputA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ReadConsoleOutputA	      C   ReadConsoleOutput equ <ReadConsoleOutputA>
+			      C ENDIF
+			      C 
+			      C ReadConsoleOutputAttribute PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C ReadConsoleOutputCharacterA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ReadConsoleOutputCharact   C   ReadConsoleOutputCharacter equ <ReadConsoleOutputCharacterA>
+   erA
+			      C ENDIF
+			      C 
+			      C ReadConsoleOutputCharacterW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReadConsoleOutputW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReadConsoleW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReadDirectoryChangesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReadFile PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ReadFileEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ReadFileScatter PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ReadProcessMemory PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C RegisterWaitForSingleObject PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C RegisterWaitForSingleObjectEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ReleaseActCtx PROTO STDCALL :DWORD
+			      C ReleaseMutex PROTO STDCALL :DWORD
+			      C ReleaseSemaphore PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C RemoveDirectoryA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = RemoveDirectoryA	      C   RemoveDirectory equ <RemoveDirectoryA>
+			      C ENDIF
+			      C 
+			      C RemoveDirectoryW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RemoveLocalAlternateComputerNameA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = RemoveLocalAlternateComp   C   RemoveLocalAlternateComputerName equ <RemoveLocalAlternateComputerNameA>
+   uterNameA
+			      C ENDIF
+			      C 
+			      C RemoveLocalAlternateComputerNameW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RemoveVectoredExceptionHandler PROTO STDCALL :DWORD
+			      C 
+			      C ReplaceFileA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ReplaceFileA		      C   ReplaceFile equ <ReplaceFileA>
+			      C ENDIF
+			      C 
+			      C ReplaceFileW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RequestDeviceWakeup PROTO STDCALL :DWORD
+			      C RequestWakeupLatency PROTO STDCALL :DWORD
+			      C ResetEvent PROTO STDCALL :DWORD
+			      C ResetWriteWatch PROTO STDCALL :DWORD,:DWORD
+			      C RestoreLastError PROTO STDCALL :DWORD
+			      C ResumeThread PROTO STDCALL :DWORD
+			      C RtlCaptureContext PROTO STDCALL :DWORD
+			      C RtlCaptureStackBackTrace PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C RtlFillMemory PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C RtlMoveMemory PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C RtlUnwind PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C RtlZeroMemory PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C ScrollConsoleScreenBufferA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ScrollConsoleScreenBuffe   C   ScrollConsoleScreenBuffer equ <ScrollConsoleScreenBufferA>
+   rA
+			      C ENDIF
+			      C 
+			      C ScrollConsoleScreenBufferW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SearchPathA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SearchPathA		      C   SearchPath equ <SearchPathA>
+			      C ENDIF
+			      C 
+			      C SearchPathW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetCalendarInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetCalendarInfoA	      C   SetCalendarInfo equ <SetCalendarInfoA>
+			      C ENDIF
+			      C 
+			      C SetCalendarInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetCommBreak PROTO STDCALL :DWORD
+			      C SetCommConfig PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetCommMask PROTO STDCALL :DWORD,:DWORD
+			      C SetCommState PROTO STDCALL :DWORD,:DWORD
+			      C SetCommTimeouts PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SetComputerNameA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = SetComputerNameA	      C   SetComputerName equ <SetComputerNameA>
+			      C ENDIF
+			      C 
+			      C SetComputerNameExA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetComputerNameExA	      C   SetComputerNameEx equ <SetComputerNameExA>
+			      C ENDIF
+			      C 
+			      C SetComputerNameExW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetComputerNameW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetConsoleActiveScreenBuffer PROTO STDCALL :DWORD
+			      C SetConsoleCP PROTO STDCALL :DWORD
+			      C SetConsoleCtrlHandler PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleCursor PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleCursorInfo PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleCursorPosition PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleMode PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleOutputCP PROTO STDCALL :DWORD
+			      C SetConsoleScreenBufferSize PROTO STDCALL :DWORD,:DWORD
+			      C SetConsoleTextAttribute PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SetConsoleTitleA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = SetConsoleTitleA	      C   SetConsoleTitle equ <SetConsoleTitleA>
+			      C ENDIF
+			      C 
+			      C SetConsoleTitleW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetConsoleWindowInfo PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetCriticalSectionSpinCount PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SetCurrentDirectoryA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = SetCurrentDirectoryA	      C   SetCurrentDirectory equ <SetCurrentDirectoryA>
+			      C ENDIF
+			      C 
+			      C SetCurrentDirectoryW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetDefaultCommConfigA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetDefaultCommConfigA      C   SetDefaultCommConfig equ <SetDefaultCommConfigA>
+			      C ENDIF
+			      C 
+			      C SetDefaultCommConfigW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetDllDirectoryA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = SetDllDirectoryA	      C   SetDllDirectory equ <SetDllDirectoryA>
+			      C ENDIF
+			      C 
+			      C SetDllDirectoryW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetEndOfFile PROTO STDCALL :DWORD
+			      C 
+			      C SetEnvironmentVariableA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetEnvironmentVariableA    C   SetEnvironmentVariable equ <SetEnvironmentVariableA>
+			      C ENDIF
+			      C 
+			      C SetEnvironmentVariableW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetErrorMode PROTO STDCALL :DWORD
+			      C SetEvent PROTO STDCALL :DWORD
+			      C SetFileApisToANSI PROTO STDCALL
+			      C SetFileApisToOEM PROTO STDCALL
+			      C 
+			      C SetFileAttributesA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetFileAttributesA	      C   SetFileAttributes equ <SetFileAttributesA>
+			      C ENDIF
+			      C 
+			      C SetFileAttributesW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetFilePointer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetFilePointerEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C SetFileShortNameA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetFileShortNameA	      C   SetFileShortName equ <SetFileShortNameA>
+			      C ENDIF
+			      C 
+			      C SetFileShortNameW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetFileTime PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetFileValidData PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C SetFirmwareEnvironmentVariableA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetFirmwareEnvironmentVa   C   SetFirmwareEnvironmentVariable equ <SetFirmwareEnvironmentVariableA>
+   riableA
+			      C ENDIF
+			      C 
+			      C SetFirmwareEnvironmentVariableW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetHandleCount PROTO STDCALL :DWORD
+			      C SetHandleInformation PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetInformationJobObject PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetLastError PROTO STDCALL :DWORD
+			      C 
+			      C SetLocalPrimaryComputerNameA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetLocalPrimaryComputerN   C   SetLocalPrimaryComputerName equ <SetLocalPrimaryComputerNameA>
+   ameA
+			      C ENDIF
+			      C 
+			      C SetLocalPrimaryComputerNameW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetLocalTime PROTO STDCALL :DWORD
+			      C 
+			      C SetLocaleInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetLocaleInfoA	      C   SetLocaleInfo equ <SetLocaleInfoA>
+			      C ENDIF
+			      C 
+			      C SetLocaleInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetMailslotInfo PROTO STDCALL :DWORD,:DWORD
+			      C SetMessageWaitingIndicator PROTO STDCALL :DWORD,:DWORD
+			      C SetNamedPipeHandleState PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetPriorityClass PROTO STDCALL :DWORD,:DWORD
+			      C SetProcessAffinityMask PROTO STDCALL :DWORD,:DWORD
+			      C SetProcessPriorityBoost PROTO STDCALL :DWORD,:DWORD
+			      C SetProcessShutdownParameters PROTO STDCALL :DWORD,:DWORD
+			      C SetProcessWorkingSetSize PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetStdHandle PROTO STDCALL :DWORD,:DWORD
+			      C SetSystemPowerState PROTO STDCALL :DWORD,:DWORD
+			      C SetSystemTime PROTO STDCALL :DWORD
+			      C SetSystemTimeAdjustment PROTO STDCALL :DWORD,:DWORD
+			      C SetTapeParameters PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetTapePosition PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetThreadAffinityMask PROTO STDCALL :DWORD,:DWORD
+			      C SetThreadContext PROTO STDCALL :DWORD,:DWORD
+			      C SetThreadExecutionState PROTO STDCALL :DWORD
+			      C SetThreadIdealProcessor PROTO STDCALL :DWORD,:DWORD
+			      C SetThreadLocale PROTO STDCALL :DWORD
+			      C SetThreadPriority PROTO STDCALL :DWORD,:DWORD
+			      C SetThreadPriorityBoost PROTO STDCALL :DWORD,:DWORD
+			      C SetTimeZoneInformation PROTO STDCALL :DWORD
+			      C SetTimerQueueTimer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetUnhandledExceptionFilter PROTO STDCALL :DWORD
+			      C SetUserGeoID PROTO STDCALL :DWORD
+			      C 
+			      C SetVolumeLabelA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetVolumeLabelA	      C   SetVolumeLabel equ <SetVolumeLabelA>
+			      C ENDIF
+			      C 
+			      C SetVolumeLabelW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetVolumeMountPointA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetVolumeMountPointA	      C   SetVolumeMountPoint equ <SetVolumeMountPointA>
+			      C ENDIF
+			      C 
+			      C SetVolumeMountPointW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetWaitableTimer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetupComm PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SignalObjectAndWait PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SizeofResource PROTO STDCALL :DWORD,:DWORD
+			      C Sleep PROTO STDCALL :DWORD
+			      C SleepEx PROTO STDCALL :DWORD,:DWORD
+			      C SuspendThread PROTO STDCALL :DWORD
+			      C SwitchToFiber PROTO STDCALL :DWORD
+			      C SwitchToThread PROTO STDCALL
+			      C SystemTimeToFileTime PROTO STDCALL :DWORD,:DWORD
+			      C SystemTimeToTzSpecificLocalTime PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C TerminateJobObject PROTO STDCALL :DWORD,:DWORD
+			      C TerminateProcess PROTO STDCALL :DWORD,:DWORD
+			      C TerminateThread PROTO STDCALL :DWORD,:DWORD
+			      C Thread32First PROTO STDCALL :DWORD,:DWORD
+			      C Thread32Next PROTO STDCALL :DWORD,:DWORD
+			      C TlsAlloc PROTO STDCALL
+			      C TlsFree PROTO STDCALL :DWORD
+			      C TlsGetValue PROTO STDCALL :DWORD
+			      C TlsSetValue PROTO STDCALL :DWORD,:DWORD
+			      C Toolhelp32ReadProcessMemory PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C TransactNamedPipe PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C TransmitCommChar PROTO STDCALL :DWORD,:DWORD
+			      C TryEnterCriticalSection PROTO STDCALL :DWORD
+			      C TzSpecificLocalTimeToSystemTime PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C UnhandledExceptionFilter PROTO STDCALL :DWORD
+			      C UnlockFile PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C UnlockFileEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C UnmapViewOfFile PROTO STDCALL :DWORD
+			      C UnregisterWait PROTO STDCALL :DWORD
+			      C UnregisterWaitEx PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C UpdateResourceA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = UpdateResourceA	      C   UpdateResource equ <UpdateResourceA>
+			      C ENDIF
+			      C 
+			      C UpdateResourceW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C VerLanguageNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = VerLanguageNameA	      C   VerLanguageName equ <VerLanguageNameA>
+			      C ENDIF
+			      C 
+			      C VerLanguageNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C VerSetConditionMask PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C VerifyVersionInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = VerifyVersionInfoA	      C   VerifyVersionInfo equ <VerifyVersionInfoA>
+			      C ENDIF
+			      C 
+			      C VerifyVersionInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C VirtualAlloc PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualAllocEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualFree PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C VirtualFreeEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualLock PROTO STDCALL :DWORD,:DWORD
+			      C VirtualProtect PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualProtectEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualQuery PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C VirtualQueryEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C VirtualUnlock PROTO STDCALL :DWORD,:DWORD
+			      C WTSGetActiveConsoleSessionId PROTO STDCALL
+			      C WaitCommEvent PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C WaitForDebugEvent PROTO STDCALL :DWORD,:DWORD
+			      C WaitForMultipleObjects PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C WaitForMultipleObjectsEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C WaitForSingleObject PROTO STDCALL :DWORD,:DWORD
+			      C WaitForSingleObjectEx PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C WaitNamedPipeA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WaitNamedPipeA	      C   WaitNamedPipe equ <WaitNamedPipeA>
+			      C ENDIF
+			      C 
+			      C WaitNamedPipeW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WideCharToMultiByte PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C WinExec PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C WriteConsoleA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteConsoleA	      C   WriteConsole equ <WriteConsoleA>
+			      C ENDIF
+			      C 
+			      C WriteConsoleInputA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteConsoleInputA	      C   WriteConsoleInput equ <WriteConsoleInputA>
+			      C ENDIF
+			      C 
+			      C WriteConsoleInputW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteConsoleOutputA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteConsoleOutputA	      C   WriteConsoleOutput equ <WriteConsoleOutputA>
+			      C ENDIF
+			      C 
+			      C WriteConsoleOutputAttribute PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C WriteConsoleOutputCharacterA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteConsoleOutputCharac   C   WriteConsoleOutputCharacter equ <WriteConsoleOutputCharacterA>
+   terA
+			      C ENDIF
+			      C 
+			      C WriteConsoleOutputCharacterW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteConsoleOutputW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteConsoleW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteFile PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C WriteFileEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C WriteFileGather PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C WritePrivateProfileSectionA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WritePrivateProfileSecti   C   WritePrivateProfileSection equ <WritePrivateProfileSectionA>
+   onA
+			      C ENDIF
+			      C 
+			      C WritePrivateProfileSectionW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WritePrivateProfileStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WritePrivateProfileStrin   C   WritePrivateProfileString equ <WritePrivateProfileStringA>
+   gA
+			      C ENDIF
+			      C 
+			      C WritePrivateProfileStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WritePrivateProfileStructA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WritePrivateProfileStruc   C   WritePrivateProfileStruct equ <WritePrivateProfileStructA>
+   tA
+			      C ENDIF
+			      C 
+			      C WritePrivateProfileStructW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteProcessMemory PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C WriteProfileSectionA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteProfileSectionA	      C   WriteProfileSection equ <WriteProfileSectionA>
+			      C ENDIF
+			      C 
+			      C WriteProfileSectionW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteProfileStringA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WriteProfileStringA	      C   WriteProfileString equ <WriteProfileStringA>
+			      C ENDIF
+			      C 
+			      C WriteProfileStringW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WriteTapemark PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C ZombifyActCtx PROTO STDCALL :DWORD
+			      C _hread PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C _hwrite PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C _lclose PROTO STDCALL :DWORD
+			      C _lcreat PROTO STDCALL :DWORD,:DWORD
+			      C _llseek PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C _lopen PROTO STDCALL :DWORD,:DWORD
+			      C _lread PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C _lwrite PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C lstrcatA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = lstrcatA		      C   lstrcat equ <lstrcatA>
+			      C ENDIF
+			      C 
+			      C lstrcatW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C lstrcmpA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = lstrcmpA		      C   lstrcmp equ <lstrcmpA>
+			      C ENDIF
+			      C 
+			      C lstrcmpW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C lstrcmpiA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = lstrcmpiA		      C   lstrcmpi equ <lstrcmpiA>
+			      C ENDIF
+			      C 
+			      C lstrcmpiW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C lstrcpyA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = lstrcpyA		      C   lstrcpy equ <lstrcpyA>
+			      C ENDIF
+			      C 
+			      C lstrcpyW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C lstrcpynA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = lstrcpynA		      C   lstrcpyn equ <lstrcpynA>
+			      C ENDIF
+			      C 
+			      C lstrcpynW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C lstrlenA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = lstrlenA		      C   lstrlen equ <lstrlenA>
+			      C ENDIF
+			      C 
+			      C lstrlenW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ELSE
+			      C ENDIF
+			      C 
+				include c:\masm32\include\user32.inc
+			      C ; --------------------------------------------------------------------------------------------------
+			      C ;                           user32.inc Copyright The MASM32 SDK 1998-2010
+			      C ; --------------------------------------------------------------------------------------------------
+			      C 
+			      C IFNDEF USER32_INC
+ = 1			      C USER32_INC equ <1>
+			      C 
+			      C ActivateKeyboardLayout PROTO STDCALL :DWORD,:DWORD
+			      C AdjustWindowRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C AdjustWindowRectEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C AllowSetForegroundWindow PROTO STDCALL :DWORD
+			      C AnimateWindow PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C AnyPopup PROTO STDCALL
+			      C 
+			      C AppendMenuA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = AppendMenuA		      C   AppendMenu equ <AppendMenuA>
+			      C ENDIF
+			      C 
+			      C AppendMenuW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ArrangeIconicWindows PROTO STDCALL :DWORD
+			      C AttachThreadInput PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C BeginDeferWindowPos PROTO STDCALL :DWORD
+			      C BeginPaint PROTO STDCALL :DWORD,:DWORD
+			      C BlockInput PROTO STDCALL :DWORD
+			      C BringWindowToTop PROTO STDCALL :DWORD
+			      C 
+			      C BroadcastSystemMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = BroadcastSystemMessageA    C   BroadcastSystemMessage equ <BroadcastSystemMessageA>
+			      C ENDIF
+			      C 
+			      C BroadcastSystemMessageExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = BroadcastSystemMessageEx   C   BroadcastSystemMessageEx equ <BroadcastSystemMessageExA>
+   A
+			      C ENDIF
+			      C 
+			      C BroadcastSystemMessageExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C BroadcastSystemMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C CallMsgFilterA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CallMsgFilterA	      C   CallMsgFilter equ <CallMsgFilterA>
+			      C ENDIF
+			      C 
+			      C CallMsgFilterW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CallNextHookEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CallWindowProcA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CallWindowProcA	      C   CallWindowProc equ <CallWindowProcA>
+			      C ENDIF
+			      C 
+			      C CallWindowProcW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CascadeChildWindows PROTO STDCALL :DWORD,:DWORD
+			      C CascadeWindows PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ChangeClipboardChain PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C ChangeDisplaySettingsA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ChangeDisplaySettingsA     C   ChangeDisplaySettings equ <ChangeDisplaySettingsA>
+			      C ENDIF
+			      C 
+			      C ChangeDisplaySettingsExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ChangeDisplaySettingsExA   C   ChangeDisplaySettingsEx equ <ChangeDisplaySettingsExA>
+			      C ENDIF
+			      C 
+			      C ChangeDisplaySettingsExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ChangeDisplaySettingsW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ChangeMenuA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ChangeMenuA		      C   ChangeMenu equ <ChangeMenuA>
+			      C ENDIF
+			      C 
+			      C ChangeMenuW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharLowerA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = CharLowerA		      C   CharLower equ <CharLowerA>
+			      C ENDIF
+			      C 
+			      C CharLowerBuffA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharLowerBuffA	      C   CharLowerBuff equ <CharLowerBuffA>
+			      C ENDIF
+			      C 
+			      C CharLowerBuffW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharLowerW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharNextA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = CharNextA		      C   CharNext equ <CharNextA>
+			      C ENDIF
+			      C 
+			      C CharNextExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharNextExA		      C   CharNextEx equ <CharNextExA>
+			      C ENDIF
+			      C 
+			      C CharNextW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharPrevA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharPrevA		      C   CharPrev equ <CharPrevA>
+			      C ENDIF
+			      C 
+			      C CharPrevExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharPrevExA		      C   CharPrevEx equ <CharPrevExA>
+			      C ENDIF
+			      C 
+			      C CharPrevW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharToOemA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharToOemA		      C   CharToOem equ <CharToOemA>
+			      C ENDIF
+			      C 
+			      C CharToOemBuffA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharToOemBuffA	      C   CharToOemBuff equ <CharToOemBuffA>
+			      C ENDIF
+			      C 
+			      C CharToOemBuffW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharToOemW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharUpperA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = CharUpperA		      C   CharUpper equ <CharUpperA>
+			      C ENDIF
+			      C 
+			      C CharUpperBuffA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CharUpperBuffA	      C   CharUpperBuff equ <CharUpperBuffA>
+			      C ENDIF
+			      C 
+			      C CharUpperBuffW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CharUpperW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CheckDlgButton PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C CheckMenuItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C CheckMenuRadioItem PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CheckRadioButton PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C ChildWindowFromPoint PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C ChildWindowFromPointEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C ClientToScreen PROTO STDCALL :DWORD,:DWORD
+			      C ClipCursor PROTO STDCALL :DWORD
+			      C CloseClipboard PROTO STDCALL
+			      C CloseDesktop PROTO STDCALL :DWORD
+			      C CloseWindow PROTO STDCALL :DWORD
+			      C CloseWindowStation PROTO STDCALL :DWORD
+			      C 
+			      C CopyAcceleratorTableA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CopyAcceleratorTableA      C   CopyAcceleratorTable equ <CopyAcceleratorTableA>
+			      C ENDIF
+			      C 
+			      C CopyAcceleratorTableW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CopyIcon PROTO STDCALL :DWORD
+			      C CopyImage PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CopyRect PROTO STDCALL :DWORD,:DWORD
+			      C CountClipboardFormats PROTO STDCALL
+			      C 
+			      C CreateAcceleratorTableA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateAcceleratorTableA    C   CreateAcceleratorTable equ <CreateAcceleratorTableA>
+			      C ENDIF
+			      C 
+			      C CreateAcceleratorTableW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateCaret PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateCursor PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C CreateDesktopA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateDesktopA	      C   CreateDesktop equ <CreateDesktopA>
+			      C ENDIF
+			      C 
+			      C CreateDesktopW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateDialogIndirectParamA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateDialogIndirectPara   C   CreateDialogIndirectParam equ <CreateDialogIndirectParamA>
+   mA
+			      C ENDIF
+			      C 
+			      C CreateDialogIndirectParamW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateDialogParamA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateDialogParamA	      C   CreateDialogParam equ <CreateDialogParamA>
+			      C ENDIF
+			      C 
+			      C CreateDialogParamW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateIcon PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateIconFromResource PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateIconFromResourceEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C CreateIconIndirect PROTO STDCALL :DWORD
+			      C 
+			      C CreateMDIWindowA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateMDIWindowA	      C   CreateMDIWindow equ <CreateMDIWindowA>
+			      C ENDIF
+			      C 
+			      C CreateMDIWindowW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateMenu PROTO STDCALL
+			      C CreatePopupMenu PROTO STDCALL
+			      C 
+			      C CreateWindowExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateWindowExA	      C   CreateWindowEx equ <CreateWindowExA>
+			      C ENDIF
+			      C 
+			      C CreateWindowExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C CreateWindowStationA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = CreateWindowStationA	      C   CreateWindowStation equ <CreateWindowStationA>
+			      C ENDIF
+			      C 
+			      C CreateWindowStationW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DbgWin32HeapFail PROTO STDCALL :DWORD,:DWORD
+			      C DbgWin32HeapStat PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeAbandonTransaction PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeAccessData PROTO STDCALL :DWORD,:DWORD
+			      C DdeAddData PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DdeClientTransaction PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DdeCmpStringHandles PROTO STDCALL :DWORD,:DWORD
+			      C DdeConnect PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DdeConnectList PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DdeCreateDataHandle PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C DdeCreateStringHandleA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DdeCreateStringHandleA     C   DdeCreateStringHandle equ <DdeCreateStringHandleA>
+			      C ENDIF
+			      C 
+			      C DdeCreateStringHandleW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DdeDisconnect PROTO STDCALL :DWORD
+			      C DdeDisconnectList PROTO STDCALL :DWORD
+			      C DdeEnableCallback PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeFreeDataHandle PROTO STDCALL :DWORD
+			      C DdeFreeStringHandle PROTO STDCALL :DWORD,:DWORD
+			      C DdeGetData PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DdeGetLastError PROTO STDCALL :DWORD
+			      C DdeImpersonateClient PROTO STDCALL :DWORD
+			      C 
+			      C DdeInitializeA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DdeInitializeA	      C   DdeInitialize equ <DdeInitializeA>
+			      C ENDIF
+			      C 
+			      C DdeInitializeW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DdeKeepStringHandle PROTO STDCALL :DWORD,:DWORD
+			      C DdeNameService PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DdePostAdvise PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeQueryConvInfo PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeQueryNextServer PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C DdeQueryStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DdeQueryStringA	      C   DdeQueryString equ <DdeQueryStringA>
+			      C ENDIF
+			      C 
+			      C DdeQueryStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DdeReconnect PROTO STDCALL :DWORD
+			      C DdeSetQualityOfService PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeSetUserHandle PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DdeUnaccessData PROTO STDCALL :DWORD
+			      C DdeUninitialize PROTO STDCALL :DWORD
+			      C 
+			      C DefDlgProcA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DefDlgProcA		      C   DefDlgProc equ <DefDlgProcA>
+			      C ENDIF
+			      C 
+			      C DefDlgProcW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DefFrameProcA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DefFrameProcA	      C   DefFrameProc equ <DefFrameProcA>
+			      C ENDIF
+			      C 
+			      C DefFrameProcW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DefMDIChildProcA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DefMDIChildProcA	      C   DefMDIChildProc equ <DefMDIChildProcA>
+			      C ENDIF
+			      C 
+			      C DefMDIChildProcW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DefRawInputProc PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C DefWindowProcA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DefWindowProcA	      C   DefWindowProc equ <DefWindowProcA>
+			      C ENDIF
+			      C 
+			      C DefWindowProcW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DeferWindowPos PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DeleteMenu PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DeregisterShellHookWindow PROTO STDCALL :DWORD
+			      C DestroyAcceleratorTable PROTO STDCALL :DWORD
+			      C DestroyCaret PROTO STDCALL
+			      C DestroyCursor PROTO STDCALL :DWORD
+			      C DestroyIcon PROTO STDCALL :DWORD
+			      C DestroyMenu PROTO STDCALL :DWORD
+			      C DestroyWindow PROTO STDCALL :DWORD
+			      C 
+			      C DialogBoxIndirectParamA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DialogBoxIndirectParamA    C   DialogBoxIndirectParam equ <DialogBoxIndirectParamA>
+			      C ENDIF
+			      C 
+			      C DialogBoxIndirectParamW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DialogBoxParamA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DialogBoxParamA	      C   DialogBoxParam equ <DialogBoxParamA>
+			      C ENDIF
+			      C 
+			      C DialogBoxParamW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DisableProcessWindowsGhosting PROTO STDCALL
+			      C 
+			      C DispatchMessageA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = DispatchMessageA	      C   DispatchMessage equ <DispatchMessageA>
+			      C ENDIF
+			      C 
+			      C DispatchMessageW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DlgDirListA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DlgDirListA		      C   DlgDirList equ <DlgDirListA>
+			      C ENDIF
+			      C 
+			      C DlgDirListComboBoxA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DlgDirListComboBoxA	      C   DlgDirListComboBox equ <DlgDirListComboBoxA>
+			      C ENDIF
+			      C 
+			      C DlgDirListComboBoxW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DlgDirListW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DlgDirSelectComboBoxExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DlgDirSelectComboBoxExA    C   DlgDirSelectComboBoxEx equ <DlgDirSelectComboBoxExA>
+			      C ENDIF
+			      C 
+			      C DlgDirSelectComboBoxExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DlgDirSelectExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DlgDirSelectExA	      C   DlgDirSelectEx equ <DlgDirSelectExA>
+			      C ENDIF
+			      C 
+			      C DlgDirSelectExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DragDetect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C DragObject PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawAnimatedRects PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawCaption PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawEdge PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawFocusRect PROTO STDCALL :DWORD,:DWORD
+			      C DrawFrame PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawFrameControl PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawIcon PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawIconEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C DrawMenuBar PROTO STDCALL :DWORD
+			      C 
+			      C DrawStateA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DrawStateA		      C   DrawState equ <DrawStateA>
+			      C ENDIF
+			      C 
+			      C DrawStateW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DrawTextA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DrawTextA		      C   DrawText equ <DrawTextA>
+			      C ENDIF
+			      C 
+			      C DrawTextExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = DrawTextExA		      C   DrawTextEx equ <DrawTextExA>
+			      C ENDIF
+			      C 
+			      C DrawTextExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C DrawTextW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EditWndProc PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C EmptyClipboard PROTO STDCALL
+			      C EnableMenuItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C EnableScrollBar PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C EnableWindow PROTO STDCALL :DWORD,:DWORD
+			      C EndDeferWindowPos PROTO STDCALL :DWORD
+			      C EndDialog PROTO STDCALL :DWORD,:DWORD
+			      C EndMenu PROTO STDCALL
+			      C EndPaint PROTO STDCALL :DWORD,:DWORD
+			      C EndTask PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C EnumChildWindows PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C EnumClipboardFormats PROTO STDCALL :DWORD
+			      C EnumDesktopWindows PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C EnumDesktopsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDesktopsA	      C   EnumDesktops equ <EnumDesktopsA>
+			      C ENDIF
+			      C 
+			      C EnumDesktopsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumDisplayDevicesA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDisplayDevicesA	      C   EnumDisplayDevices equ <EnumDisplayDevicesA>
+			      C ENDIF
+			      C 
+			      C EnumDisplayDevicesW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumDisplayMonitors PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C EnumDisplaySettingsA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDisplaySettingsA	      C   EnumDisplaySettings equ <EnumDisplaySettingsA>
+			      C ENDIF
+			      C 
+			      C EnumDisplaySettingsExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumDisplaySettingsExA     C   EnumDisplaySettingsEx equ <EnumDisplaySettingsExA>
+			      C ENDIF
+			      C 
+			      C EnumDisplaySettingsExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumDisplaySettingsW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumPropsA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumPropsA		      C   EnumProps equ <EnumPropsA>
+			      C ENDIF
+			      C 
+			      C EnumPropsExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumPropsExA		      C   EnumPropsEx equ <EnumPropsExA>
+			      C ENDIF
+			      C 
+			      C EnumPropsExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumPropsW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumThreadWindows PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C EnumWindowStationsA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = EnumWindowStationsA	      C   EnumWindowStations equ <EnumWindowStationsA>
+			      C ENDIF
+			      C 
+			      C EnumWindowStationsW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C EnumWindows PROTO STDCALL :DWORD,:DWORD
+			      C EqualRect PROTO STDCALL :DWORD,:DWORD
+			      C ExcludeUpdateRgn PROTO STDCALL :DWORD,:DWORD
+			      C ExitWindowsEx PROTO STDCALL :DWORD,:DWORD
+			      C FillRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C FindWindowA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindWindowA		      C   FindWindow equ <FindWindowA>
+			      C ENDIF
+			      C 
+			      C FindWindowExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = FindWindowExA	      C   FindWindowEx equ <FindWindowExA>
+			      C ENDIF
+			      C 
+			      C FindWindowExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FindWindowW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C FlashWindow PROTO STDCALL :DWORD,:DWORD
+			      C FlashWindowEx PROTO STDCALL :DWORD
+			      C FrameRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C FreeDDElParam PROTO STDCALL :DWORD,:DWORD
+			      C GetActiveWindow PROTO STDCALL
+			      C 
+			      C GetAltTabInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetAltTabInfoA	      C   GetAltTabInfo equ <GetAltTabInfoA>
+			      C ENDIF
+			      C 
+			      C GetAltTabInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetAncestor PROTO STDCALL :DWORD,:DWORD
+			      C GetAsyncKeyState PROTO STDCALL :DWORD
+			      C GetCapture PROTO STDCALL
+			      C GetCaretBlinkTime PROTO STDCALL
+			      C GetCaretPos PROTO STDCALL :DWORD
+			      C 
+			      C GetClassInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetClassInfoA	      C   GetClassInfo equ <GetClassInfoA>
+			      C ENDIF
+			      C 
+			      C GetClassInfoExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetClassInfoExA	      C   GetClassInfoEx equ <GetClassInfoExA>
+			      C ENDIF
+			      C 
+			      C GetClassInfoExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetClassInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetClassLongA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetClassLongA	      C   GetClassLong equ <GetClassLongA>
+			      C ENDIF
+			      C 
+			      C GetClassLongW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetClassNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetClassNameA	      C   GetClassName equ <GetClassNameA>
+			      C ENDIF
+			      C 
+			      C GetClassNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetClassWord PROTO STDCALL :DWORD,:DWORD
+			      C GetClientRect PROTO STDCALL :DWORD,:DWORD
+			      C GetClipCursor PROTO STDCALL :DWORD
+			      C GetClipboardData PROTO STDCALL :DWORD
+			      C 
+			      C GetClipboardFormatNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetClipboardFormatNameA    C   GetClipboardFormatName equ <GetClipboardFormatNameA>
+			      C ENDIF
+			      C 
+			      C GetClipboardFormatNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetClipboardOwner PROTO STDCALL
+			      C GetClipboardSequenceNumber PROTO STDCALL
+			      C GetClipboardViewer PROTO STDCALL
+			      C GetComboBoxInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetCursor PROTO STDCALL
+			      C GetCursorInfo PROTO STDCALL :DWORD
+			      C GetCursorPos PROTO STDCALL :DWORD
+			      C GetDC PROTO STDCALL :DWORD
+			      C GetDCEx PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetDesktopWindow PROTO STDCALL
+			      C GetDialogBaseUnits PROTO STDCALL
+			      C GetDlgCtrlID PROTO STDCALL :DWORD
+			      C GetDlgItem PROTO STDCALL :DWORD,:DWORD
+			      C GetDlgItemInt PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C GetDlgItemTextA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetDlgItemTextA	      C   GetDlgItemText equ <GetDlgItemTextA>
+			      C ENDIF
+			      C 
+			      C GetDlgItemTextW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetDoubleClickTime PROTO STDCALL
+			      C GetFocus PROTO STDCALL
+			      C GetForegroundWindow PROTO STDCALL
+			      C GetGUIThreadInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetGuiResources PROTO STDCALL :DWORD,:DWORD
+			      C GetIconInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetInputDesktop PROTO STDCALL
+			      C GetInputState PROTO STDCALL
+			      C GetKBCodePage PROTO STDCALL
+			      C 
+			      C GetKeyNameTextA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetKeyNameTextA	      C   GetKeyNameText equ <GetKeyNameTextA>
+			      C ENDIF
+			      C 
+			      C GetKeyNameTextW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetKeyState PROTO STDCALL :DWORD
+			      C GetKeyboardLayout PROTO STDCALL :DWORD
+			      C GetKeyboardLayoutList PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetKeyboardLayoutNameA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetKeyboardLayoutNameA     C   GetKeyboardLayoutName equ <GetKeyboardLayoutNameA>
+			      C ENDIF
+			      C 
+			      C GetKeyboardLayoutNameW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetKeyboardState PROTO STDCALL :DWORD
+			      C GetKeyboardType PROTO STDCALL :DWORD
+			      C GetLastActivePopup PROTO STDCALL :DWORD
+			      C GetLastInputInfo PROTO STDCALL :DWORD
+			      C GetLayeredWindowAttributes PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetListBoxInfo PROTO STDCALL :DWORD
+			      C GetMenu PROTO STDCALL :DWORD
+			      C GetMenuBarInfo PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetMenuCheckMarkDimensions PROTO STDCALL
+			      C GetMenuContextHelpId PROTO STDCALL :DWORD
+			      C GetMenuDefaultItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetMenuInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetMenuItemCount PROTO STDCALL :DWORD
+			      C GetMenuItemID PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetMenuItemInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetMenuItemInfoA	      C   GetMenuItemInfo equ <GetMenuItemInfoA>
+			      C ENDIF
+			      C 
+			      C GetMenuItemInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetMenuItemRect PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetMenuState PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C GetMenuStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetMenuStringA	      C   GetMenuString equ <GetMenuStringA>
+			      C ENDIF
+			      C 
+			      C GetMenuStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetMessageA		      C   GetMessage equ <GetMessageA>
+			      C ENDIF
+			      C 
+			      C GetMessageExtraInfo PROTO STDCALL
+			      C GetMessagePos PROTO STDCALL
+			      C GetMessageTime PROTO STDCALL
+			      C 
+			      C GetMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetMonitorInfoA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetMonitorInfoA	      C   GetMonitorInfo equ <GetMonitorInfoA>
+			      C ENDIF
+			      C 
+			      C GetMonitorInfoW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetMouseMovePointsEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetNextDlgGroupItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetNextDlgTabItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetOpenClipboardWindow PROTO STDCALL
+			      C GetParent PROTO STDCALL :DWORD
+			      C GetPriorityClipboardFormat PROTO STDCALL :DWORD,:DWORD
+			      C GetProcessDefaultLayout PROTO STDCALL :DWORD
+			      C GetProcessWindowStation PROTO STDCALL
+			      C 
+			      C GetPropA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetPropA		      C   GetProp equ <GetPropA>
+			      C ENDIF
+			      C 
+			      C GetPropW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetQueueStatus PROTO STDCALL :DWORD
+			      C GetRawInputBuffer PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetRawInputData PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C GetRawInputDeviceInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetRawInputDeviceInfoA     C   GetRawInputDeviceInfo equ <GetRawInputDeviceInfoA>
+			      C ENDIF
+			      C 
+			      C GetRawInputDeviceInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetRawInputDeviceList PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetRegisteredRawInputDevices PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetScrollBarInfo PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetScrollInfo PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetScrollPos PROTO STDCALL :DWORD,:DWORD
+			      C GetScrollRange PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C GetShellWindow PROTO STDCALL
+			      C GetSubMenu PROTO STDCALL :DWORD,:DWORD
+			      C GetSysColor PROTO STDCALL :DWORD
+			      C GetSysColorBrush PROTO STDCALL :DWORD
+			      C GetSystemMenu PROTO STDCALL :DWORD,:DWORD
+			      C GetSystemMetrics PROTO STDCALL :DWORD
+			      C 
+			      C GetTabbedTextExtentA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetTabbedTextExtentA	      C   GetTabbedTextExtent equ <GetTabbedTextExtentA>
+			      C ENDIF
+			      C 
+			      C GetTabbedTextExtentW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetThreadDesktop PROTO STDCALL :DWORD
+			      C GetTitleBarInfo PROTO STDCALL :DWORD,:DWORD
+			      C GetTopWindow PROTO STDCALL :DWORD
+			      C GetUpdateRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C GetUpdateRgn PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C GetUserObjectInformationA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetUserObjectInformation   C   GetUserObjectInformation equ <GetUserObjectInformationA>
+   A
+			      C ENDIF
+			      C 
+			      C GetUserObjectInformationW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetUserObjectSecurity PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C GetWindow PROTO STDCALL :DWORD,:DWORD
+			      C GetWindowContextHelpId PROTO STDCALL :DWORD
+			      C GetWindowDC PROTO STDCALL :DWORD
+			      C GetWindowInfo PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetWindowLongA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetWindowLongA	      C   GetWindowLong equ <GetWindowLongA>
+			      C ENDIF
+			      C 
+			      C GetWindowLongW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C 
+			      C GetWindowModuleFileNameA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetWindowModuleFileNameA   C   GetWindowModuleFileName equ <GetWindowModuleFileNameA>
+			      C ENDIF
+			      C 
+			      C GetWindowModuleFileNameW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetWindowPlacement PROTO STDCALL :DWORD,:DWORD
+			      C GetWindowRect PROTO STDCALL :DWORD,:DWORD
+			      C GetWindowRgn PROTO STDCALL :DWORD,:DWORD
+			      C GetWindowRgnBox PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GetWindowTextA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GetWindowTextA	      C   GetWindowText equ <GetWindowTextA>
+			      C ENDIF
+			      C 
+			      C GetWindowTextLengthA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = GetWindowTextLengthA	      C   GetWindowTextLength equ <GetWindowTextLengthA>
+			      C ENDIF
+			      C 
+			      C GetWindowTextLengthW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetWindowTextW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C GetWindowThreadProcessId PROTO STDCALL :DWORD,:DWORD
+			      C GetWindowWord PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C GrayStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = GrayStringA		      C   GrayString equ <GrayStringA>
+			      C ENDIF
+			      C 
+			      C GrayStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C HideCaret PROTO STDCALL :DWORD
+			      C HiliteMenuItem PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C IMPGetIMEA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = IMPGetIMEA		      C   IMPGetIME equ <IMPGetIMEA>
+			      C ENDIF
+			      C 
+			      C IMPGetIMEW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IMPQueryIMEA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = IMPQueryIMEA		      C   IMPQueryIME equ <IMPQueryIMEA>
+			      C ENDIF
+			      C 
+			      C IMPQueryIMEW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IMPSetIMEA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = IMPSetIMEA		      C   IMPSetIME equ <IMPSetIMEA>
+			      C ENDIF
+			      C 
+			      C IMPSetIMEW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ImpersonateDdeClientWindow PROTO STDCALL :DWORD,:DWORD
+			      C InSendMessage PROTO STDCALL
+			      C InSendMessageEx PROTO STDCALL :DWORD
+			      C InflateRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C InsertMenuA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = InsertMenuA		      C   InsertMenu equ <InsertMenuA>
+			      C ENDIF
+			      C 
+			      C InsertMenuItemA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = InsertMenuItemA	      C   InsertMenuItem equ <InsertMenuItemA>
+			      C ENDIF
+			      C 
+			      C InsertMenuItemW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C InsertMenuW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C InternalGetWindowText PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IntersectRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C InvalidateRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C InvalidateRgn PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C InvertRect PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C IsCharAlphaA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = IsCharAlphaA		      C   IsCharAlpha equ <IsCharAlphaA>
+			      C ENDIF
+			      C 
+			      C IsCharAlphaNumericA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = IsCharAlphaNumericA	      C   IsCharAlphaNumeric equ <IsCharAlphaNumericA>
+			      C ENDIF
+			      C 
+			      C IsCharAlphaNumericW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsCharAlphaW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsCharLowerA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = IsCharLowerA		      C   IsCharLower equ <IsCharLowerA>
+			      C ENDIF
+			      C 
+			      C IsCharLowerW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsCharUpperA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = IsCharUpperA		      C   IsCharUpper equ <IsCharUpperA>
+			      C ENDIF
+			      C 
+			      C IsCharUpperW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsChild PROTO STDCALL :DWORD,:DWORD
+			      C IsClipboardFormatAvailable PROTO STDCALL :DWORD
+			      C 
+			      C IsDialogMessageA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = IsDialogMessageA	      C   IsDialogMessage equ <IsDialogMessageA>
+			      C ENDIF
+			      C 
+			      C IsDialogMessageW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C IsDlgButtonChecked PROTO STDCALL :DWORD,:DWORD
+			      C IsGUIThread PROTO STDCALL :DWORD
+			      C IsHungAppWindow PROTO STDCALL :DWORD
+			      C IsIconic PROTO STDCALL :DWORD
+			      C IsMenu PROTO STDCALL :DWORD
+			      C IsRectEmpty PROTO STDCALL :DWORD
+			      C IsWinEventHookInstalled PROTO STDCALL :DWORD
+			      C IsWindow PROTO STDCALL :DWORD
+			      C IsWindowEnabled PROTO STDCALL :DWORD
+			      C IsWindowUnicode PROTO STDCALL :DWORD
+			      C IsWindowVisible PROTO STDCALL :DWORD
+			      C IsZoomed PROTO STDCALL :DWORD
+			      C KillTimer PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C LoadAcceleratorsA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadAcceleratorsA	      C   LoadAccelerators equ <LoadAcceleratorsA>
+			      C ENDIF
+			      C 
+			      C LoadAcceleratorsW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadBitmapA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadBitmapA		      C   LoadBitmap equ <LoadBitmapA>
+			      C ENDIF
+			      C 
+			      C LoadBitmapW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadCursorA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadCursorA		      C   LoadCursor equ <LoadCursorA>
+			      C ENDIF
+			      C 
+			      C LoadCursorFromFileA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = LoadCursorFromFileA	      C   LoadCursorFromFile equ <LoadCursorFromFileA>
+			      C ENDIF
+			      C 
+			      C LoadCursorFromFileW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadCursorW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadIconA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadIconA		      C   LoadIcon equ <LoadIconA>
+			      C ENDIF
+			      C 
+			      C LoadIconW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadImageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadImageA		      C   LoadImage equ <LoadImageA>
+			      C ENDIF
+			      C 
+			      C LoadImageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadKeyboardLayoutA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadKeyboardLayoutA	      C   LoadKeyboardLayout equ <LoadKeyboardLayoutA>
+			      C ENDIF
+			      C 
+			      C LoadKeyboardLayoutW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadMenuA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadMenuA		      C   LoadMenu equ <LoadMenuA>
+			      C ENDIF
+			      C 
+			      C LoadMenuIndirectA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = LoadMenuIndirectA	      C   LoadMenuIndirect equ <LoadMenuIndirectA>
+			      C ENDIF
+			      C 
+			      C LoadMenuIndirectW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadMenuW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LoadStringA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = LoadStringA		      C   LoadString equ <LoadStringA>
+			      C ENDIF
+			      C 
+			      C LoadStringW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C LockSetForegroundWindow PROTO STDCALL :DWORD
+			      C LockWindowUpdate PROTO STDCALL :DWORD
+			      C LockWorkStation PROTO STDCALL
+			      C LookupIconIdFromDirectory PROTO STDCALL :DWORD,:DWORD
+			      C LookupIconIdFromDirectoryEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C MapDialogRect PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C MapVirtualKeyA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MapVirtualKeyA	      C   MapVirtualKey equ <MapVirtualKeyA>
+			      C ENDIF
+			      C 
+			      C MapVirtualKeyExA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MapVirtualKeyExA	      C   MapVirtualKeyEx equ <MapVirtualKeyExA>
+			      C ENDIF
+			      C 
+			      C MapVirtualKeyExW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MapVirtualKeyW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MapWindowPoints PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C MenuItemFromPoint PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C MessageBeep PROTO STDCALL :DWORD
+			      C 
+			      C MessageBoxA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MessageBoxA		      C   MessageBox equ <MessageBoxA>
+			      C ENDIF
+			      C 
+			      C MessageBoxExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MessageBoxExA	      C   MessageBoxEx equ <MessageBoxExA>
+			      C ENDIF
+			      C 
+			      C MessageBoxExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MessageBoxIndirectA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = MessageBoxIndirectA	      C   MessageBoxIndirect equ <MessageBoxIndirectA>
+			      C ENDIF
+			      C 
+			      C MessageBoxIndirectW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MessageBoxTimeoutA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = MessageBoxTimeoutA	      C   MessageBoxTimeout equ <MessageBoxTimeoutA>
+			      C ENDIF
+			      C 
+			      C MessageBoxTimeoutW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MessageBoxW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ModifyMenuA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = ModifyMenuA		      C   ModifyMenu equ <ModifyMenuA>
+			      C ENDIF
+			      C 
+			      C ModifyMenuW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C MonitorFromPoint PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C MonitorFromRect PROTO STDCALL :DWORD,:DWORD
+			      C MonitorFromWindow PROTO STDCALL :DWORD,:DWORD
+			      C MoveWindow PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C MsgWaitForMultipleObjects PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C MsgWaitForMultipleObjectsEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C NotifyWinEvent PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C OemKeyScan PROTO STDCALL :DWORD
+			      C 
+			      C OemToCharA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OemToCharA		      C   OemToChar equ <OemToCharA>
+			      C ENDIF
+			      C 
+			      C OemToCharBuffA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OemToCharBuffA	      C   OemToCharBuff equ <OemToCharBuffA>
+			      C ENDIF
+			      C 
+			      C OemToCharBuffW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OemToCharW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OffsetRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C OpenClipboard PROTO STDCALL :DWORD
+			      C 
+			      C OpenDesktopA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenDesktopA		      C   OpenDesktop equ <OpenDesktopA>
+			      C ENDIF
+			      C 
+			      C OpenDesktopW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C OpenIcon PROTO STDCALL :DWORD
+			      C OpenInputDesktop PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C OpenWindowStationA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = OpenWindowStationA	      C   OpenWindowStation equ <OpenWindowStationA>
+			      C ENDIF
+			      C 
+			      C OpenWindowStationW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PackDDElParam PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C PaintDesktop PROTO STDCALL :DWORD
+			      C 
+			      C PeekMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = PeekMessageA		      C   PeekMessage equ <PeekMessageA>
+			      C ENDIF
+			      C 
+			      C PeekMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PostMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = PostMessageA		      C   PostMessage equ <PostMessageA>
+			      C ENDIF
+			      C 
+			      C PostMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PostQuitMessage PROTO STDCALL :DWORD
+			      C 
+			      C PostThreadMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = PostThreadMessageA	      C   PostThreadMessage equ <PostThreadMessageA>
+			      C ENDIF
+			      C 
+			      C PostThreadMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PrintWindow PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C PrivateExtractIconsA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = PrivateExtractIconsA	      C   PrivateExtractIcons equ <PrivateExtractIconsA>
+			      C ENDIF
+			      C 
+			      C PrivateExtractIconsW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C PtInRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C RealChildWindowFromPoint PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C RealGetWindowClassA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = RealGetWindowClassA	      C   RealGetWindowClass equ <RealGetWindowClassA>
+			      C ENDIF
+			      C 
+			      C RealGetWindowClassW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RedrawWindow PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C RegisterClassA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = RegisterClassA	      C   RegisterClass equ <RegisterClassA>
+			      C ENDIF
+			      C 
+			      C RegisterClassExA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = RegisterClassExA	      C   RegisterClassEx equ <RegisterClassExA>
+			      C ENDIF
+			      C 
+			      C RegisterClassExW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RegisterClassW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RegisterClipboardFormatA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = RegisterClipboardFormatA   C   RegisterClipboardFormat equ <RegisterClipboardFormatA>
+			      C ENDIF
+			      C 
+			      C RegisterClipboardFormatW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RegisterDeviceNotificationA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = RegisterDeviceNotificati   C   RegisterDeviceNotification equ <RegisterDeviceNotificationA>
+   onA
+			      C ENDIF
+			      C 
+			      C RegisterDeviceNotificationW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C RegisterHotKey PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C RegisterRawInputDevices PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C RegisterShellHookWindow PROTO STDCALL :DWORD
+			      C 
+			      C RegisterWindowMessageA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = RegisterWindowMessageA     C   RegisterWindowMessage equ <RegisterWindowMessageA>
+			      C ENDIF
+			      C 
+			      C RegisterWindowMessageW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReleaseCapture PROTO STDCALL
+			      C ReleaseDC PROTO STDCALL :DWORD,:DWORD
+			      C RemoveMenu PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C RemovePropA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = RemovePropA		      C   RemoveProp equ <RemovePropA>
+			      C ENDIF
+			      C 
+			      C RemovePropW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ReplyMessage PROTO STDCALL :DWORD
+			      C ReuseDDElParam PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ScreenToClient PROTO STDCALL :DWORD,:DWORD
+			      C ScrollDC PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ScrollWindow PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ScrollWindowEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C SendDlgItemMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendDlgItemMessageA	      C   SendDlgItemMessage equ <SendDlgItemMessageA>
+			      C ENDIF
+			      C 
+			      C SendDlgItemMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SendIMEMessageExA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendIMEMessageExA	      C   SendIMEMessageEx equ <SendIMEMessageExA>
+			      C ENDIF
+			      C 
+			      C SendIMEMessageExW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SendInput PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C SendMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendMessageA		      C   SendMessage equ <SendMessageA>
+			      C ENDIF
+			      C 
+			      C SendMessageCallbackA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendMessageCallbackA	      C   SendMessageCallback equ <SendMessageCallbackA>
+			      C ENDIF
+			      C 
+			      C SendMessageCallbackW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SendMessageTimeoutA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendMessageTimeoutA	      C   SendMessageTimeout equ <SendMessageTimeoutA>
+			      C ENDIF
+			      C 
+			      C SendMessageTimeoutW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SendMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SendNotifyMessageA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SendNotifyMessageA	      C   SendNotifyMessage equ <SendNotifyMessageA>
+			      C ENDIF
+			      C 
+			      C SendNotifyMessageW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetActiveWindow PROTO STDCALL :DWORD
+			      C SetCapture PROTO STDCALL :DWORD
+			      C SetCaretBlinkTime PROTO STDCALL :DWORD
+			      C SetCaretPos PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SetClassLongA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetClassLongA	      C   SetClassLong equ <SetClassLongA>
+			      C ENDIF
+			      C 
+			      C SetClassLongW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetClassWord PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetClipboardData PROTO STDCALL :DWORD,:DWORD
+			      C SetClipboardViewer PROTO STDCALL :DWORD
+			      C SetCursor PROTO STDCALL :DWORD
+			      C SetCursorPos PROTO STDCALL :DWORD,:DWORD
+			      C SetDebugErrorLevel PROTO STDCALL :DWORD
+			      C SetDeskWallpaper PROTO STDCALL :DWORD
+			      C SetDlgItemInt PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C SetDlgItemTextA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetDlgItemTextA	      C   SetDlgItemText equ <SetDlgItemTextA>
+			      C ENDIF
+			      C 
+			      C SetDlgItemTextW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetDoubleClickTime PROTO STDCALL :DWORD
+			      C SetFocus PROTO STDCALL :DWORD
+			      C SetForegroundWindow PROTO STDCALL :DWORD
+			      C SetKeyboardState PROTO STDCALL :DWORD
+			      C SetLastErrorEx PROTO STDCALL :DWORD,:DWORD
+			      C SetLayeredWindowAttributes PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetMenu PROTO STDCALL :DWORD,:DWORD
+			      C SetMenuContextHelpId PROTO STDCALL :DWORD,:DWORD
+			      C SetMenuDefaultItem PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetMenuInfo PROTO STDCALL :DWORD,:DWORD
+			      C SetMenuItemBitmaps PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C SetMenuItemInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetMenuItemInfoA	      C   SetMenuItemInfo equ <SetMenuItemInfoA>
+			      C ENDIF
+			      C 
+			      C SetMenuItemInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetMessageExtraInfo PROTO STDCALL :DWORD
+			      C SetMessageQueue PROTO STDCALL :DWORD
+			      C SetParent PROTO STDCALL :DWORD,:DWORD
+			      C SetProcessDefaultLayout PROTO STDCALL :DWORD
+			      C SetProcessWindowStation PROTO STDCALL :DWORD
+			      C 
+			      C SetPropA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetPropA		      C   SetProp equ <SetPropA>
+			      C ENDIF
+			      C 
+			      C SetPropW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetRect PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetRectEmpty PROTO STDCALL :DWORD
+			      C SetScrollInfo PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetScrollPos PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C SetScrollRange PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetShellWindow PROTO STDCALL :DWORD
+			      C SetSysColors PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetSystemCursor PROTO STDCALL :DWORD,:DWORD
+			      C SetThreadDesktop PROTO STDCALL :DWORD
+			      C SetTimer PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C SetUserObjectInformationA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetUserObjectInformation   C   SetUserObjectInformation equ <SetUserObjectInformationA>
+   A
+			      C ENDIF
+			      C 
+			      C SetUserObjectInformationW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetUserObjectSecurity PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SetWinEventHook PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetWindowContextHelpId PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SetWindowLongA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetWindowLongA	      C   SetWindowLong equ <SetWindowLongA>
+			      C ENDIF
+			      C 
+			      C SetWindowLongW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetWindowPlacement PROTO STDCALL :DWORD,:DWORD
+			      C SetWindowPos PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C SetWindowRgn PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C SetWindowTextA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetWindowTextA	      C   SetWindowText equ <SetWindowTextA>
+			      C ENDIF
+			      C 
+			      C SetWindowTextW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetWindowWord PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C 
+			      C SetWindowsHookA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetWindowsHookA	      C   SetWindowsHook equ <SetWindowsHookA>
+			      C ENDIF
+			      C 
+			      C SetWindowsHookExA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SetWindowsHookExA	      C   SetWindowsHookEx equ <SetWindowsHookExA>
+			      C ENDIF
+			      C 
+			      C SetWindowsHookExW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C SetWindowsHookW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ShowCaret PROTO STDCALL :DWORD
+			      C ShowCursor PROTO STDCALL :DWORD
+			      C ShowOwnedPopups PROTO STDCALL :DWORD,:DWORD
+			      C ShowScrollBar PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C ShowWindow PROTO STDCALL :DWORD,:DWORD
+			      C ShowWindowAsync PROTO STDCALL :DWORD,:DWORD
+			      C SubtractRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C SwapMouseButton PROTO STDCALL :DWORD
+			      C SwitchDesktop PROTO STDCALL :DWORD
+			      C SwitchToThisWindow PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C SystemParametersInfoA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = SystemParametersInfoA      C   SystemParametersInfo equ <SystemParametersInfoA>
+			      C ENDIF
+			      C 
+			      C SystemParametersInfoW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C TabbedTextOutA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = TabbedTextOutA	      C   TabbedTextOut equ <TabbedTextOutA>
+			      C ENDIF
+			      C 
+			      C TabbedTextOutW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C TileChildWindows PROTO STDCALL :DWORD,:DWORD
+			      C TileWindows PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ToAscii PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ToAsciiEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ToUnicode PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C ToUnicodeEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C TrackMouseEvent PROTO STDCALL :DWORD
+			      C TrackPopupMenu PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C TrackPopupMenuEx PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C TranslateAcceleratorA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = TranslateAcceleratorA      C   TranslateAccelerator equ <TranslateAcceleratorA>
+			      C ENDIF
+			      C 
+			      C TranslateAcceleratorW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C TranslateMDISysAccel PROTO STDCALL :DWORD,:DWORD
+			      C TranslateMessage PROTO STDCALL :DWORD
+			      C UnhookWinEvent PROTO STDCALL :DWORD
+			      C UnhookWindowsHook PROTO STDCALL :DWORD,:DWORD
+			      C UnhookWindowsHookEx PROTO STDCALL :DWORD
+			      C UnionRect PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C UnloadKeyboardLayout PROTO STDCALL :DWORD
+			      C UnpackDDElParam PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C UnregisterClassA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = UnregisterClassA	      C   UnregisterClass equ <UnregisterClassA>
+			      C ENDIF
+			      C 
+			      C UnregisterClassW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C UnregisterDeviceNotification PROTO STDCALL :DWORD
+			      C UnregisterHotKey PROTO STDCALL :DWORD,:DWORD
+			      C UpdateLayeredWindow PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C UpdateWindow PROTO STDCALL :DWORD
+			      C UserHandleGrantAccess PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C ValidateRect PROTO STDCALL :DWORD,:DWORD
+			      C ValidateRgn PROTO STDCALL :DWORD,:DWORD
+			      C 
+			      C VkKeyScanA PROTO STDCALL :DWORD
+			      C IFNDEF __UNICODE__
+ = VkKeyScanA		      C   VkKeyScan equ <VkKeyScanA>
+			      C ENDIF
+			      C 
+			      C VkKeyScanExA PROTO STDCALL :DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = VkKeyScanExA		      C   VkKeyScanEx equ <VkKeyScanExA>
+			      C ENDIF
+			      C 
+			      C VkKeyScanExW PROTO STDCALL :DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C VkKeyScanW PROTO STDCALL :DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WINNLSEnableIME PROTO STDCALL :DWORD,:DWORD
+			      C WINNLSGetEnableStatus PROTO STDCALL :DWORD
+			      C WINNLSGetIMEHotkey PROTO STDCALL :DWORD
+			      C WaitForInputIdle PROTO STDCALL :DWORD,:DWORD
+			      C WaitMessage PROTO STDCALL
+			      C 
+			      C WinHelpA PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = WinHelpA		      C   WinHelp equ <WinHelpA>
+			      C ENDIF
+			      C 
+			      C WinHelpW PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C WindowFromDC PROTO STDCALL :DWORD
+			      C WindowFromPoint PROTO STDCALL :DWORD,:DWORD
+			      C keybd_event PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD
+			      C mouse_event PROTO STDCALL :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
+			      C 
+			      C wsprintfA PROTO C :VARARG
+			      C IFNDEF __UNICODE__
+ = wsprintfA		      C   wsprintf equ <wsprintfA>
+			      C ENDIF
+			      C 
+			      C wsprintfW PROTO C :VARARG
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C wvsprintfA PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFNDEF __UNICODE__
+ = wvsprintfA		      C   wvsprintf equ <wvsprintfA>
+			      C ENDIF
+			      C 
+			      C wvsprintfW PROTO STDCALL :DWORD,:DWORD,:DWORD
+			      C IFDEF __UNICODE__
+			      C ENDIF
+			      C 
+			      C ELSE
+			      C ENDIF
+			      C 
+				includelib c:\masm32\lib\kernel32.lib
+				includelib c:\masm32\lib\user32.lib
+				;=========================================
+ 00000000			.data
+ 00000000 DB			A db "Ы"           ; ASCII код первой буквы фамилии (прописная буква)
+ 00000001 E9			B db "й"           ; ASCII код первой буквы имени (строчная буква)
+ 00000002 D0 E5 E7 F3 EB	tit db "Результат", 0 ; Заголовок окна MessageBox
+	   FC F2 E0 F2 00
+ 0000000C 00			rez db ?           ; Переменная для хранения результата
+
+				;=========================================
+ 00000000			.code
+ 00000000			main:
+				    ; Загрузка ASCII кодов в регистры
+ 00000000  A0 00000000 R	    mov al, A      ; Загружаем ASCII код A в AL
+ 00000005  8A 1D 00000001 R	    mov bl, B      ; Загружаем ASCII код B в BL
+
+				    ; Выполнение операции (A AND B) OR B => CL
+ 0000000B  22 C3		    and al, bl     ; Выполняем A AND B, результат в AL
+ 0000000D  0A C3		    or al, bl      ; Выполняем (A AND B) OR B, результат в AL
+ 0000000F  8A C8		    mov cl, al     ; Сохраняем результат в регистре CL (R = CL)
+
+				    ; 2. Если 4-й бит R (CL) равен 0, то записываем 1 в 6-й бит R, иначе 0
+ 00000011  F6 C1 10		    test cl, 00010000b ; Проверка 4-го бита (бит с индексом 4)
+ 00000014  75 03		    jnz skip_set_k    ; Если 4-й бит равен 1, пропустить установку
+ 00000016  80 C9 40		    or cl, 01000000b  ; Установка 6-го бита в 1, если 4-й бит был равен 0
+ 00000019			skip_set_k:
+
+				    ; 3. Инвертирование 5-го бита регистра R (CL)
+ 00000019  80 F1 20		    xor cl, 00100000b ; Инвертирование 5-го бита
+
+				    ; 4. Поменять местами тетрады байта, записанного в регистре R (CL)
+ 0000001C  8A C1		    mov al, cl        ; Копия регистра CL в AL
+ 0000001E  C0 E9 04		    shr cl, 4         ; Сдвиг CL вправо на 4 бита (оставляем правую тетраду)
+ 00000021  C0 E0 04		    shl al, 4         ; Сдвиг AL влево на 4 бита (оставляем левую тетраду)
+ 00000024  0A C8		    or cl, al         ; Объединение тетрад в CL
+
+				    ; 5. Если R < 32, прибавить к R 32
+ 00000026  80 F9 20		    cmp cl, 32        ; Сравнение значения в CL с 32
+ 00000029  73 03		    jae skip_add_32   ; Если значение >= 32, пропустить добавление
+ 0000002B  80 C1 20		    add cl, 32        ; Иначе добавляем 32
+ 0000002E			skip_add_32:
+
+				    ; 6) Вывести на экран символ, код которого в регистре R
+ 0000002E  88 0D 0000000C R	    mov rez, CL        ; Записываем код символа в rez
+				    invoke MessageBox, 0, OFFSET rez, OFFSET tit, 0
+
+				    ; Завершение программы
+				    invoke ExitProcess, 0
+
+				end main
