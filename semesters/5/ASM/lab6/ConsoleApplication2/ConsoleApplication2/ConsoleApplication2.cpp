@@ -2,37 +2,61 @@
 #include <ctime>
 #include <windows.h>
 #include <iomanip>
-#include <stack>
+#include <cmath>
+#include <stdexcept>
+#include <cstdlib>
+
 using namespace std;
 
-// ASM обработка одного элемента
+int processElement(int value) {
+    if (value == 0) {
+        throw std::invalid_argument("Division by zero is not allowed.");
+    }
+
+    int result = value; // Начальное значение
+    const int iterations = 100000;
+
+    for (int i = 0; i < iterations; ++i) {
+        result = (pow(result, 2)) / value;               // Первый квадрат и деление
+        result = (result * 2) / value;                   // Умножение на 2 и деление
+        result = (pow(result, 2)) / value;              // Второй квадрат и деление
+        result = (result + value) / 2;                   // Среднее арифметическое
+        result = (result + abs(result - value)) / 2; // Учитываем модуль разности
+        result = static_cast<int>(fmod(result, value));       // Остаток от деления
+    }
+
+    return result;
+}
+
+
+
+
 extern "C" long processElement(long value);
 
-// Основная функция расчета среднего значения
+
 long calculateAverageWithComplexCalculations(long inputarray[], int inputsize) {
-    long sum = 0; // Используем long для предотвращения переполнения
+    long sum = 0;
     long array_elem = 0;
     for (int i = 0; i < inputsize; ++i) {
         array_elem = inputarray[i];
-        long result = processElement(array_elem); // Вызов функции для обработки элемента
+        long result = processElement(array_elem);
         //cout << result << endl;
-        sum += result; // добавляем результат в общую сумму
+        sum += result;
     }
 
-    return sum; // возвращаем среднее значение
+    return sum;
 }
 
 int main() {
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-    stack<std::string> stack;
-    const int ARRAY_SIZE = 100;
+    const int ARRAY_SIZE = 1000;
 
     long array[ARRAY_SIZE]; // Массив теперь с long вместо int
     srand(time(nullptr));
 
     for (int i = 0; i < ARRAY_SIZE; ++i) {
-        array[i] = 25;
+        array[i] = 1337;
     }
 
     cout << "Исходный массив:" << endl;
@@ -46,7 +70,6 @@ int main() {
         cout << "Ошибка: массив пустой!" << endl;
         return -1;
     }
-    cout << "stack size: " << stack.size() << std::endl;
     long averageAsm = calculateAverageWithComplexCalculations(array, ARRAY_SIZE);
     clock_t end = clock();
 

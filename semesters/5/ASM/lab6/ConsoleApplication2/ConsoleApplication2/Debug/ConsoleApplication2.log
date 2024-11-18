@@ -1,3 +1,5 @@
 ﻿  ConsoleApplication2.cpp
-C:\Users\Фрешик\source\repos\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(32,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  ConsoleApplication2.vcxproj -> C:\Users\Фрешик\source\repos\ConsoleApplication2\Debug\ConsoleApplication2.exe
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\5\ASM\lab6\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(20,35): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\5\ASM\lab6\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(22,35): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\5\ASM\lab6\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(56,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  ConsoleApplication2.vcxproj -> C:\Users\Фрешик\Desktop\ASM\Labs\semesters\5\ASM\lab6\ConsoleApplication2\Debug\ConsoleApplication2.exe
