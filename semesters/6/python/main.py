@@ -52,6 +52,10 @@ class ExpertSystem:
         self.help_button = ttk.Button(self.controls_frame, text="Помощь", command=self.show_help, bootstyle=INFO)
         self.help_button.pack(side=tk.LEFT, padx=5)
 
+        # Кнопка "Назад"
+        self.back_button = ttk.Button(self.controls_frame, text="Назад", command=self.go_back, bootstyle=WARNING)
+        self.back_button.pack(side=tk.LEFT, padx=5)
+
         # Кнопка "Начать сначала"
         self.restart_button = ttk.Button(self.controls_frame, text="Начать сначала", command=self.restart_survey, bootstyle=WARNING)
         self.restart_button.pack(side=tk.LEFT, padx=5)
@@ -75,7 +79,7 @@ class ExpertSystem:
             widget.destroy()
 
         if self.current_state == 0:
-            self.label.config(text="Сколько времени вы готовы уделить просмотру фильма?")
+            self.label.config(text="Вы готовы уделить фильму больше 2-х часов?")
             self.show_options(["Нет, у меня мало времени", "У меня много времени"])
         
         # Логика для "мало времени"
@@ -126,10 +130,10 @@ class ExpertSystem:
 
     def animate_button(self, button):
         def flash():
-            for _ in range(5):
+            for _ in range(3):  # Уменьшено количество циклов для ускорения
                 button.config(bootstyle=random.choice([PRIMARY, SUCCESS, INFO, WARNING, DANGER]))
                 button.update_idletasks()
-                button.after(100)
+                button.after(50)  # Уменьшено время задержки
             button.config(bootstyle=PRIMARY)
         flash()
 
@@ -137,6 +141,13 @@ class ExpertSystem:
         self.responses.append(response)
         self.current_state += 1
         self.ask_question()
+
+    def go_back(self):
+        if self.current_state > 0:
+            self.current_state -= 1
+            self.responses.pop()
+            self.explanation_label.config(text="")  # Очищаем комментарий при откате назад
+            self.ask_question()
 
     def show_result(self):
         result, explanation = self.get_recommendation()
@@ -148,7 +159,7 @@ class ExpertSystem:
         def change_color():
             colors = ["red", "blue", "green", "purple", "orange"]
             self.label.config(foreground=random.choice(colors))
-            self.root.after(500, change_color)
+            self.root.after(200, change_color)  # Уменьшено время задержки
         change_color()
 
     def get_recommendation(self):
