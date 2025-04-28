@@ -8,69 +8,73 @@ class ExpertSystem:
     def __init__(self, root):
         self.root = root
         self.root.title("Экспертная система по подбору фильмов")
-        self.root.geometry("800x600")
+        self.root.geometry("900x700")
         self.style = ttk.Style(theme="cosmo")
         self.current_state = 0
         self.responses = []
-        self.help_messages = {
-            0: "Выберите, сколько времени вы готовы уделить просмотру фильма. Это поможет системе подобрать подходящий вариант.",
-            1: "Выберите жанр фильма, который вам интересен. Это может быть фантастика, драма, боевик, военный или комедия.",
-            2: {
-                "Нет, у меня мало времени": {
-                    "Фантастика": "Выберите, хотите ли вы фильм с необычным сюжетом.",
-                    "Драма": "Выберите, хотите ли вы фильм с глубоким смыслом.",
-                    "Боевик": "Выберите, хотите ли вы фильм с динамичным сюжетом.",
-                    "Комедия": "Выберите, хотите ли вы лёгкий и весёлый фильм.",
-                    "Военный": "Выберите, хотите ли вы фильм на основе реальных событий."
-                },
-                "У меня много времени": {
-                    "Есть": "Выберите, хотите ли вы что-то новое или классическое.",
-                    "Нет": "Выберите, хотите ли вы классику или что-то современное."
-                }
-            }
-        }
+        self.history = []
+        self.help_messages = self.build_help_messages()
         self.setup_ui()
 
+    def build_help_messages(self):
+        return {
+            0: "Выберите, сколько времени готовы уделить просмотру фильма — это влияет на масштаб и сложность сюжета.",
+            1: "Выберите жанр — жанр определит основное настроение фильма.",
+            2: {
+                "Фантастика": "Какую тематику фантастики вы предпочитаете: далёкое будущее, киберпанк или инопланетные миры?",
+                "Драма": "Хотите историю личной драмы или масштабную социальную проблему?",
+                "Боевик": "Предпочитаете современный боевик, исторический или футуристический?",
+                "Комедия": "Любите лёгкие комедии, чёрный юмор или сатиру?",
+                "Военный": "Интересуют реальные исторические события или вымышленные истории?"
+            },
+            3: {
+                "Фантастика": "Выберите, какой настрой вам ближе: философский, приключенческий или напряжённый.",
+                "Драма": "Хотите, чтобы сюжет был медитативным, насыщенным событиями или шокирующим?",
+                "Боевик": "Предпочтение к динамике: бесконечный экшен или развитие персонажей?",
+                "Комедия": "Хотите более интеллектуальный юмор или что-то лёгкое и расслабляющее?",
+                "Военный": "Фильм с акцентом на батальные сцены или на психологию персонажей?"
+            },
+            4: {
+                "Фантастика": "И последнее: важна ли для вас зрелищность спецэффектов или сложность идеи?",
+                "Драма": "Что важнее — развитие персонажей или социальная критика?",
+                "Боевик": "Хотите неожиданную концовку или привычную героическую победу?",
+                "Комедия": "Любите неожиданные повороты в комедии или классические шутки?",
+                "Военный": "Хотите увидеть героизм или ужас войны?"
+            }
+        }
+
     def setup_ui(self):
-        # Основной заголовок
         self.label = ttk.Label(self.root, text="Добро пожаловать в экспертную систему по подбору фильмов!", font=("Helvetica", 14))
         self.label.pack(pady=20)
 
-        # Фрейм для вопросов и ответов (сверху)
         self.questions_frame = ttk.Frame(self.root)
         self.questions_frame.pack(pady=10, fill=tk.BOTH, expand=True)
 
-        # Фрейм для кнопок управления (снизу)
         self.controls_frame = ttk.Frame(self.root)
         self.controls_frame.pack(pady=10, fill=tk.X)
 
-        # Кнопка "Начать опрос"
         self.start_button = ttk.Button(self.controls_frame, text="Начать опрос", command=self.start_survey, bootstyle=SUCCESS)
         self.start_button.pack(side=tk.LEFT, padx=5)
 
-        # Кнопка "Помощь"
         self.help_button = ttk.Button(self.controls_frame, text="Помощь", command=self.show_help, bootstyle=INFO)
         self.help_button.pack(side=tk.LEFT, padx=5)
 
-        # Кнопка "Назад"
         self.back_button = ttk.Button(self.controls_frame, text="Назад", command=self.go_back, bootstyle=WARNING)
         self.back_button.pack(side=tk.LEFT, padx=5)
 
-        # Кнопка "Начать сначала"
         self.restart_button = ttk.Button(self.controls_frame, text="Начать сначала", command=self.restart_survey, bootstyle=WARNING)
         self.restart_button.pack(side=tk.LEFT, padx=5)
 
-        # Кнопка "Выход"
         self.exit_button = ttk.Button(self.controls_frame, text="Выход", command=self.confirm_exit, bootstyle=DANGER)
         self.exit_button.pack(side=tk.LEFT, padx=5)
 
-        # Текстовое поле для обоснования
         self.explanation_label = ttk.Label(self.root, text="", font=("Helvetica", 12), wraplength=700)
         self.explanation_label.pack(pady=10)
 
     def start_survey(self):
         self.current_state = 0
         self.responses = []
+        self.history = []
         self.explanation_label.config(text="")
         self.ask_question()
 
@@ -79,46 +83,54 @@ class ExpertSystem:
             widget.destroy()
 
         if self.current_state == 0:
-            self.label.config(text="Вы готовы уделить фильму больше 2-х часов?")
-            self.show_options(["Нет, у меня мало времени", "У меня много времени"])
-        
-        # Логика для "мало времени"
-        elif self.current_state == 1 and self.responses[0] == "Нет, у меня мало времени":
-            self.label.config(text="Какой жанр вы предпочитаете?")
-            self.show_options(["Фантастика", "Драма", "Боевик", "Военный", "Комедия"])
-        
-        # Логика для "много времени"
-        elif self.current_state == 1 and self.responses[0] == "У меня много времени":
-            self.label.config(text="Есть ли у вас предпочтения по жанру?")
-            self.show_options(["Есть", "Нет"])
-        
-        # Логика для "мало времени" (после выбора жанра)
-        elif self.current_state == 2 and self.responses[0] == "Нет, у меня мало времени":
-            if self.responses[1] == "Фантастика":
-                self.label.config(text="Хотите ли вы фильм с необычным сюжетом?")
-                self.show_options(["Да", "Нет"])
-            elif self.responses[1] == "Драма":
-                self.label.config(text="Хотите ли вы фильм с глубоким смыслом?")
-                self.show_options(["Да", "Нет"])
-            elif self.responses[1] == "Боевик":
-                self.label.config(text="Хотите ли вы фильм с динамичным сюжетом?")
-                self.show_options(["Да", "Нет"])
-            elif self.responses[1] == "Комедия":
-                self.label.config(text="Хотите ли вы лёгкий и весёлый фильм?")
-                self.show_options(["Да", "Нет"])
-            elif self.responses[1] == "Военный":
-                self.label.config(text="Хотите ли вы фильм на основе реальных событий?")
-                self.show_options(["Да", "Нет"])
-        
-        # Логика для "много времени" (после выбора предпочтений)
-        elif self.current_state == 2 and self.responses[0] == "У меня много времени":
-            if self.responses[1] == "Есть":
-                self.label.config(text="Хотите ли вы что-то новое?")
-                self.show_options(["Да", "Нет"])
-            else:
-                self.label.config(text="Хотите ли вы классику?")
-                self.show_options(["Да", "Нет"])
-        
+            self.label.config(text="Готовы уделить фильму больше 2-х часов?")
+            self.show_options(["Нет, короткий фильм", "Да, длинный фильм"])
+        elif self.current_state == 1:
+            self.label.config(text="Выберите жанр:")
+            self.show_options(["Фантастика", "Драма", "Боевик", "Комедия", "Военный"])
+        elif self.current_state == 2:
+            genre = self.responses[1]
+            if genre == "Фантастика":
+                self.label.config(text="Какая тематика фантастики вам ближе?")
+                self.show_options(["Далёкое будущее", "Киберпанк", "Инопланетные миры"])
+            elif genre == "Драма":
+                self.label.config(text="Какой тип драмы вам ближе?")
+                self.show_options(["Личная драма", "Социальная драма"])
+            elif genre == "Боевик":
+                self.label.config(text="Какой тип боевика вам интереснее?")
+                self.show_options(["Современный", "Исторический", "Футуристический"])
+            elif genre == "Комедия":
+                self.label.config(text="Какой стиль комедии вам нравится?")
+                self.show_options(["Лёгкая", "Чёрная", "Сатира"])
+            elif genre == "Военный":
+                self.label.config(text="Какая тематика военного фильма вам ближе?")
+                self.show_options(["Реальные события", "Вымышленные события"])
+        elif self.current_state == 3:
+            genre = self.responses[1]
+            self.label.config(text=self.help_messages[3][genre])
+            if genre == "Фантастика":
+                self.show_options(["Философский", "Приключенческий", "Напряжённый"])
+            elif genre == "Драма":
+                self.show_options(["Медитативный", "Насыщенный событиями", "Шокирующий"])
+            elif genre == "Боевик":
+                self.show_options(["Бесконечный экшен", "Развитие персонажей"])
+            elif genre == "Комедия":
+                self.show_options(["Интеллектуальный юмор", "Классические шутки"])
+            elif genre == "Военный":
+                self.show_options(["Батальные сцены", "Психология персонажей"])
+        elif self.current_state == 4:
+            genre = self.responses[1]
+            self.label.config(text=self.help_messages[4][genre])
+            if genre == "Фантастика":
+                self.show_options(["Зрелищность спецэффектов", "Сложность идеи"])
+            elif genre == "Драма":
+                self.show_options(["Развитие персонажей", "Социальная критика"])
+            elif genre == "Боевик":
+                self.show_options(["Неожиданная концовка", "Героическая победа"])
+            elif genre == "Комедия":
+                self.show_options(["Неожиданные повороты", "Классические шутки"])
+            elif genre == "Военный":
+                self.show_options(["Героизм", "Ужасы войны"])
         else:
             self.show_result()
 
@@ -126,19 +138,10 @@ class ExpertSystem:
         for option in options:
             button = ttk.Button(self.questions_frame, text=option, command=lambda opt=option: self.record_response(opt), bootstyle=PRIMARY)
             button.pack(pady=5, fill=tk.X)
-            self.animate_button(button)
-
-    def animate_button(self, button):
-        def flash():
-            for _ in range(3):  # Уменьшено количество циклов для ускорения
-                button.config(bootstyle=random.choice([PRIMARY, SUCCESS, INFO, WARNING, DANGER]))
-                button.update_idletasks()
-                button.after(50)  # Уменьшено время задержки
-            button.config(bootstyle=PRIMARY)
-        flash()
 
     def record_response(self, response):
         self.responses.append(response)
+        self.history.append((self.current_state, response))
         self.current_state += 1
         self.ask_question()
 
@@ -146,87 +149,78 @@ class ExpertSystem:
         if self.current_state > 0:
             self.current_state -= 1
             self.responses.pop()
-            self.explanation_label.config(text="")  # Очищаем комментарий при откате назад
+            self.history.pop()
+            self.explanation_label.config(text="")
             self.ask_question()
 
     def show_result(self):
         result, explanation = self.get_recommendation()
         self.label.config(text=result)
         self.explanation_label.config(text=explanation)
-        self.animate_text()
-
-    def animate_text(self):
-        def change_color():
-            colors = ["red", "blue", "green", "purple", "orange"]
-            self.label.config(foreground=random.choice(colors))
-            self.root.after(200, change_color)  # Уменьшено время задержки
-        change_color()
 
     def get_recommendation(self):
-        # Логика для "мало времени"
-        if self.responses[0] == "Нет, у меня мало времени":
-            if self.responses[1] == "Фантастика":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Начало'", "Вы выбрали фильм с необычным сюжетом. 'Начало' — это фильм с захватывающим и сложным сюжетом, который идеально подходит для любителей фантастики."
+        duration = self.responses[0]
+        genre = self.responses[1]
+        level1 = self.responses[2]
+        level2 = self.responses[3]
+        level3 = self.responses[4]
+
+        explanation = f"Вы выбрали фильм в жанре {genre.lower()}, с особенностями: {level1.lower()}, {level2.lower()}, и предпочтением — {level3.lower()}."
+
+        # Примеры выбора фильмов
+        if genre == "Фантастика":
+            if level1 == "Далёкое будущее":
+                if level3 == "Сложность идеи":
+                    return "Рекомендуем: 'Интерстеллар'", explanation
                 else:
-                    return "Рекомендуем: 'Интерстеллар'", "Вы выбрали классическую фантастику. 'Интерстеллар' — это эпический фильм о космических путешествиях и человеческих ценностях."
-            elif self.responses[1] == "Драма":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Побег из Шоушенка'", "Вы выбрали фильм с глубоким смыслом. 'Побег из Шоушенка' — это история о надежде и дружбе, которая оставляет сильное впечатление."
-                else:
-                    return "Рекомендуем: 'Крёстный отец'", "Вы выбрали классическую драму. 'Крёстный отец' — это культовый фильм о семье, власти и морали."
-            elif self.responses[1] == "Боевик":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Бегущий по лезвию 2049'", "Вы выбрали фильм с динамичным сюжетом. 'Бегущий по лезвию 2049' — это визуально потрясающий боевик с глубоким смыслом."
-                else:
-                    return "Рекомендуем: 'Матрица'", "Вы выбрали классический боевик. 'Матрица' — это фильм, который изменил представление о жанре."
-            elif self.responses[1] == "Комедия":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Мальчишник в Вегасе'", "Вы выбрали лёгкий и весёлый фильм. 'Мальчишник в Вегасе' — это комедия, которая поднимет вам настроение."
-                else:
-                    return "Рекомендуем: 'Джокер'", "Вы выбрали более серьёзный фильм. 'Джокер' — это драма с элементами комедии, которая заставляет задуматься."
-            elif self.responses[1] == "Военный":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Спасти рядового Райана'", "Вы выбрали фильм на основе реальных событий. 'Спасти рядового Райана' — это мощная военная драма."
-                else:
-                    return "Рекомендуем: '1917'", "Вы выбрали современный военный фильм. '1917' — это уникальный фильм, снятый в стиле одного дубля."
-        
-        # Логика для "много времени"
-        else:
-            if self.responses[1] == "Есть":
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: '1917'", "Вы выбрали что-то новое. '1917' — это современный военный фильм с уникальной съёмкой."
-                else:
-                    return "Рекомендуем: 'Интерстеллар'", "Вы выбрали классику. 'Интерстеллар' — это эпический фильм о космосе и человеческих ценностях."
+                    return "Рекомендуем: 'Аватар'", explanation
+            elif level1 == "Киберпанк":
+                return "Рекомендуем: 'Бегущий по лезвию 2049'", explanation
             else:
-                if self.responses[2] == "Да":
-                    return "Рекомендуем: 'Властелин колец'", "Вы выбрали классику. 'Властелин колец' — это эпическая трилогия, которая стала эталоном жанра."
-                else:
-                    return "Рекомендуем: 'Матрица'", "Вы выбрали что-то современное. 'Матрица' — это культовый фильм, который изменил представление о кино."
+                return "Рекомендуем: 'Стражи Галактики'", explanation
+
+        if genre == "Драма":
+            if level1 == "Личная драма":
+                return "Рекомендуем: 'Побег из Шоушенка'", explanation
+            else:
+                return "Рекомендуем: 'Три билборда на границе Эббинга, Миссури'", explanation
+
+        if genre == "Боевик":
+            if level1 == "Современный":
+                return "Рекомендуем: 'Джон Уик'", explanation
+            elif level1 == "Исторический":
+                return "Рекомендуем: 'Гладиатор'", explanation
+            else:
+                return "Рекомендуем: 'Безумный Макс: Дорога ярости'", explanation
+
+        if genre == "Комедия":
+            if level1 == "Лёгкая":
+                return "Рекомендуем: 'Очень плохие мамочки'", explanation
+            elif level1 == "Чёрная":
+                return "Рекомендуем: 'Кролик Джоджо'", explanation
+            else:
+                return "Рекомендуем: 'Диктатор'", explanation
+
+        if genre == "Военный":
+            if level1 == "Реальные события":
+                return "Рекомендуем: 'Спасти рядового Райана'", explanation
+            else:
+                return "Рекомендуем: '1917'", explanation
+
+        return "Не удалось подобрать фильм.", explanation
 
     def show_help(self):
-        if self.current_state == 0:
-            message = self.help_messages[0]
-        elif self.current_state == 1:
-            if self.responses[0] == "Нет, у меня мало времени":
-                message = self.help_messages[1]
-            else:
-                message = self.help_messages[2][self.responses[0]][self.responses[1]]
-        elif self.current_state == 2:
-            if self.responses[0] == "Нет, у меня мало времени":
-                message = self.help_messages[2][self.responses[0]][self.responses[1]]
-            else:
-                message = self.help_messages[2][self.responses[0]][self.responses[1]]
+        if self.current_state in self.help_messages:
+            message = self.help_messages[self.current_state]
+            if isinstance(message, dict):
+                genre = self.responses[1]
+                message = message.get(genre, "Помощь недоступна для этого выбора.")
         else:
-            message = "На этом этапе подсказки нет."
-        
+            message = "Помощь недоступна для этого этапа."
         messagebox.showinfo("Помощь", message)
 
     def restart_survey(self):
-        self.current_state = 0
-        self.responses = []
-        self.explanation_label.config(text="")
-        self.ask_question()
+        self.start_survey()
 
     def confirm_exit(self):
         if messagebox.askyesno("Выход", "Вы уверены, что хотите выйти?"):
