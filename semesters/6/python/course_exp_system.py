@@ -12,6 +12,7 @@ class CarDiagnosticExpertSystem:
         self.state = 1
         self.state_history = []
         self.responses = []
+        self.started = False
 
         # Интерфейс
         self.label = ttk.Label(self.root, text="", font=("Helvetica", 16), wraplength=700)
@@ -166,7 +167,19 @@ class CarDiagnosticExpertSystem:
         }
 
         self.load_data()
+        self.label.config(text="Добро пожаловать в экспертную систему!\n\nНажмите 'Начать', чтобы приступить к диагностике.")
+        self.yes_btn.config(text="Начать", command=self.start_diagnosis)
+        self.no_btn.pack_forget()
+
+    def start_diagnosis(self):
+        self.started = True
+        self.state = 1
+        self.responses = []
+        self.state_history = []
         self.show_question()
+        self.yes_btn.config(text="Да", command=lambda: self.next_state("Да"))
+        self.no_btn.pack(side=tk.LEFT, padx=10)
+
 
     def load_data(self):
         from pprint import pprint
@@ -295,11 +308,14 @@ class CarDiagnosticExpertSystem:
         }
 
     def show_question(self):
+        if not self.started:
+            return
         if self.state in self.questions:
             self.label.config(text=self.questions[self.state])
             self.result_display.config(text="")
         else:
             self.show_result()
+
 
     def next_state(self, answer):
         self.state_history.append(self.state)
