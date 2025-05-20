@@ -167,7 +167,7 @@ class CarDiagnosticExpertSystem:
         }
 
         self.load_data()
-        self.label.config(text="Добро пожаловать в экспертную систему!\n\nНажмите 'Начать', чтобы приступить к диагностике.")
+        self.label.config(text="Добро пожаловать в экспертную систему диагностики автомобиля!\n\nНажмите 'Начать', чтобы приступить к диагностике.")
         self.yes_btn.config(text="Начать", command=self.start_diagnosis)
         self.no_btn.pack_forget()
 
@@ -313,6 +313,8 @@ class CarDiagnosticExpertSystem:
         if self.state in self.questions:
             self.label.config(text=self.questions[self.state])
             self.result_display.config(text="")
+            self.yes_btn.pack(side=tk.LEFT, padx=10)
+            self.no_btn.pack(side=tk.LEFT, padx=10)
         else:
             self.show_result()
 
@@ -345,6 +347,8 @@ class CarDiagnosticExpertSystem:
         text = f"\nДиагноз: {result_title}\n\nРекомендации:\n{result_desc}"
         self.label.config(text="Результат диагностики")
         self.result_display.config(text=text)
+        self.yes_btn.pack_forget()
+        self.no_btn.pack_forget()
 
 if __name__ == "__main__":
     root = ttk.Window(themename="cosmo")
