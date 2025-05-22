@@ -1,0 +1,5 @@
+﻿  ConsoleApplication3.cpp
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\B\ConsoleApplication3\ConsoleApplication3.cpp(27,20): warning C4244: return: преобразование "__int64" в "int", возможна потеря данных
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\B\ConsoleApplication3\ConsoleApplication3.cpp(112,74): warning C4267: аргумент: преобразование из "size_t" в "DWORD"; возможна потеря данных
+  LINK : не найден или не выполнена сборка C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\B\x64\Debug\ConsoleApplication3.exe при последней инкрементной компоновке; выполняется полная компоновка
+  ConsoleApplication3.vcxproj -> C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\B\x64\Debug\ConsoleApplication3.exe

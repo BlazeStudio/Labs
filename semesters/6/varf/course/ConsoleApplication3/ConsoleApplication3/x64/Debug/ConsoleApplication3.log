@@ -1,0 +1,3 @@
+﻿  ConsoleApplication3.cpp
+C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\ConsoleApplication3\ConsoleApplication3\ConsoleApplication3.cpp(60,19): warning C4244: инициализация: преобразование "__int64" в "int", возможна потеря данных
+  ConsoleApplication3.vcxproj -> C:\Users\Фрешик\Desktop\ASM\Labs\semesters\6\varf\course\ConsoleApplication3\x64\Debug\ConsoleApplication3.exe
